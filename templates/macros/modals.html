@@ -16,7 +16,7 @@
                     {{ 'Close' if action == None else 'Cancel' }}
                 </a>
                 {% if btn != None %}
-                    <a type="submit" class="btn btn-primary">{{ btn }}</a>
+                    <input type="submit" class="btn btn-primary" value="{{ btn }}">
                 {% endif %}
             </div>
             {% if action != None %}

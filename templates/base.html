@@ -1,10 +1,10 @@
-{% from 'templates/macros/modals.html' import modal %}
-{% from 'templates/macros/forms.html' import input %}
+{% from '/macros/modals.html' import modal %}
+{% from '/macros/forms.html' import input %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">
-        <title>{% block title %}ADD TITLE{% endblock %}</title>
+        <meta charset="UTF-8">
+        <title>{{ title|default('ADD A TITLE') }}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/css/bootstrap.min.css">
         <link rel="stylesheet" href="/css/style.css">
@@ -25,10 +25,13 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="/">Home</a></li>
                     <li><a href="#about" data-toggle="modal">About</a></li>
-                    <!-- TODO: contact us, login, signup form (as modals) -->
                     <li><a href="#contact" data-toggle="modal">Contact Us</a></li>
-                    <li><a href="#login" data-toggle="modal">Login</a></li>
-                    <li><a href="#register" data-toggle="modal">Sign Up</a></li>
+                    {% if user %}
+                        <li>Welcome, {{ user.nickname() }}</li>
+                    {% else %}
+                        <li><a href="#login" data-toggle="modal">Login</a></li>
+                        <li><a href="#register" data-toggle="modal">Sign Up</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -40,8 +43,8 @@
 
     <nav class="navbar navbar-default navbar-static-bottom footer">
         <div class="container">
-            <img src="/images/html5.png" class="navbar-text text-center">
-            <img src="/images/css3.png" class="navbar-text text-center">
+            <img src="/images/html5.png" class="navbar-text text-center" alt="html5 valid">
+            <img src="/images/css3.png" class="navbar-text text-center" alt="css3 valid">
             <p class="navbar-text text-left">Site Designed And Built By Matthew Stark</p>
             <a class="navbar-btn btn-danger btn pull-right">Button Here</a>
         </div>
@@ -67,8 +70,9 @@
     {% endcall %}
 
     {% call modal('register', 'Sign Up', '/register', 'Register') %}
-        {{ input('email', 'Email', 'email', 'emailLogin', 'Enter Email') }}
-        {{ input('password', 'Password', 'pwd', 'pwdLogin', 'Enter Password') }}
+        {{ input('email', 'Email', 'email', 'emailRegister', 'Enter Email') }}
+        {{ input('password', 'Password', 'pwd', 'pwdRegister', 'Enter Password') }}
+        {{ input('password', 'Confirm Password', 'confpwdd', 'confpwdRegister', 'Enter password') }}
     {% endcall %}
 </body>
 </html>
