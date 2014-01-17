@@ -35,5 +35,5 @@ if __name__ == '__main__':
     )
     app = tornado.web.Application(handlers, **settings)
     app.listen(8080)
-    print '--------------------'
+    print('--------------------')
     tornado.ioloop.IOLoop.instance().start()
