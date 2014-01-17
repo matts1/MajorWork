@@ -21,11 +21,11 @@ class User(db.Model):
             if hashed != user.pwd:
                 return "Incorrect Password"
         else:
-            return "The email does not exist in our database"
+            return email + " does not exist in our database"
         user.login(handler)
 
     @classmethod
-    def register(cls, email, pwd, confpwd):
+    def register(cls, handler, email, pwd, confpwd):
         if not all((email, pwd, confpwd)):
             return '' # client side error messages
         if pwd != confpwd:
@@ -34,7 +34,9 @@ class User(db.Model):
             return email + ' is already in our database'
         salt = os.urandom(50).encode('hex')
         pwd = encrypt(pwd, salt)
-        cls(email=email, pwd=pwd, salt=salt).put()
+        user = cls(email=email, pwd=pwd, salt=salt)
+        user.login(handler)
+        user.put()
     
     def login(self, handler):
         self.session = os.urandom(100).encode('hex')
@@ -44,3 +46,6 @@ class User(db.Model):
     def logout(self):
         self.session = None
         self.put()
+
+
+# TODO: write tests

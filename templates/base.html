@@ -53,10 +53,9 @@
 
     <nav class="navbar navbar-default navbar-static-bottom footer">
         <div class="container">
-            <img src="/images/html5.png" class="navbar-text text-center" alt="html5 valid">
-            <img src="/images/css3.png" class="navbar-text text-center" alt="css3 valid">
-            <p class="navbar-text text-left">Site Designed And Created By Matthew Stark</p>
-            <a class="navbar-btn btn-danger btn pull-right">Button Here</a>
+            <img src="/images/html5.png" class="navbar-text text-left" alt="html5 valid">
+            <p class="navbar-text text-center">Site Designed And Created By Matthew Stark</p>
+            <img src="/images/css3.png" class="navbar-text text-right" alt="css3 valid">
         </div>
     </nav>
 
@@ -64,16 +63,18 @@
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/page.js"></script>
 
-    {% call modal('login', 'Login', '/login', 'Login') %}
-        {{ input('email', 'Email', 'email', 'emailLogin', 'Enter Email') }}
-        {{ input('password', 'Password', 'pwd', 'pwdLogin', 'Enter Password') }}
-    {% endcall %}
+    {% if user == None %}
+        {% call modal('login', 'Login', '/login', 'Login') %}
+            {{ input('email', 'Email', 'email', 'emailLogin', 'Enter Email') }}
+            {{ input('password', 'Password', 'pwd', 'pwdLogin', 'Enter Password') }}
+        {% endcall %}
 
-    {% call modal('register', 'Sign Up', '/register', 'Register') %}
-        {{ input('email', 'Email', 'email', 'emailRegister', 'Enter Email') }}
-        {{ input('password', 'Password', 'pwd', 'pwdRegister', 'Enter Password') }}
-        {{ input('password', 'Confirm Password', 'confpwd', 'confpwdRegister', 'Enter password') }}
-    {% endcall %}
+        {% call modal('register', 'Sign Up', '/register', 'Register') %}
+            {{ input('email', 'Email', 'email', 'emailRegister', 'Enter Email') }}
+            {{ input('password', 'Password', 'pwd', 'pwdRegister', 'Enter Password') }}
+            {{ input('password', 'Confirm Password', 'confpwd', 'confpwdRegister', 'Enter password') }}
+        {% endcall %}
+    {% endif %}
 
     {% if err is defined %}
     <div class="openmodal hidden" id="{{ outerid }}"></div>

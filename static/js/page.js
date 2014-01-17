@@ -8,8 +8,13 @@ $(document).ready(function () {
         $('#' + this.id).modal({show: true});
     });
 
+    // get the id of the container of the form
+    var outerlayer = $($("body")[0]);
+    if (!($('div.openmodal')[0] === undefined)) {
+        var outerlayer = $('#' + $('div.openmodal')[0].id);
+    }
+
     // Fill in the old values in the form
-    var outerlayer = $('#' + $('div.openmodal')[0].id);
     $('dl.origvals div').each(function () {
         var name = $('dt', this).text();
         var on = $('input[name=' + name + ']', outerlayer);

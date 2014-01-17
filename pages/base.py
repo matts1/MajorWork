@@ -55,13 +55,13 @@ class BaseHandler(webapp2.RequestHandler):
     def allowed(self):
         if self.require_login is None:
             return True
-        if self.require_login == True:
+        elif self.require_login == True:
             if self.user:
                 return True
             else:
                 self.redirect(LOGIN_URL)
                 return False
-        if self.require_login == False:
+        elif self.require_login == False:
             if self.user:
                 self.redirect(HOME_URL)
                 return False

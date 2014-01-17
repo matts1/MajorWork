@@ -1,6 +1,7 @@
 from models.users import User
 from pages.base import BaseHandler
 from glob import HOME_URL
+import time
 
 class LoginHandler(BaseHandler):
     formid = 'login'
@@ -13,7 +14,13 @@ class LoginHandler(BaseHandler):
 
     def mypost(self):
         self.get_data('email')
-        self.err[None] = User.authenticate(self, self.email, self.request.get('pwd'))
-
-        # TODO: make the user immediately log in, not have to refresh
-        self.redirect(HOME_URL)
+        self.err[None] = User.authenticate(
+            self,
+            self.email,
+            self.request.get('pwd')
+        )
+        if self.err[None] == None:
+            # The time.sleep is necessary because otherwise the database
+            # hasn't updated so there is no-one to log in as
+            time.sleep(0.1)
+            self.redirect(HOME_URL)

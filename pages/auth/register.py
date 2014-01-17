@@ -15,12 +15,11 @@ class RegisterHandler(BaseHandler):
     def mypost(self):
         self.get_data('email')
         self.err[None] = User.register(
+            self,
             self.email,
             self.request.get('pwd'),
             self.request.get('confpwd')
         )
         if self.err[None] is None:
-            # all good, try and login
-            User.authenticate(self, self.email, self.request.get('pwd'))
-
+            # all good, try and login for them
             self.redirect(HOME_URL)
