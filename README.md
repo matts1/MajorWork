@@ -2,18 +2,22 @@ Website which organises school related stuff
 
 Requirements:
 ---------
-* python 3.3
-* tornado (for python3)
-* jinja2 (for python3)
-* sqlalchemy (for python3)
+* python 2.7
+* tornado
+* jinja2
+* twistar
+* twisted (twistar has a dependancy of twisted)
+* sqlite3
 
 Installation
 ---------
-    sudo apt-get install python3.3 python3-pip
-    sudo pip3 install tornado
-    sudo pip3 install Jinja2
-    sudo pip3 install sqlalchemy
+    sudo apt-get install python python-pip
+    sudo pip install tornado
+    sudo pip install Jinja2
+    sudo pip install twisted
+    sudo pip install twistar
+    sudo pip install sqlite3 # should be already installed, but just to be safe
 
 Running
 ---------
-    python3 main.py
+    python main.py
