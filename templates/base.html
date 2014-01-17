@@ -1,3 +1,5 @@
+{% from 'templates/macros/modals.html' import modal %}
+{% from 'templates/macros/forms.html' import input %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -49,25 +51,24 @@
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/page.js"></script>
 
-    <div class="modal fade" id="about" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>About</h3>
-                </div>
-                <div class="modal-body">
-                    <p>
-                        This site is designed to be a collaborative elearning site where teachers can
-                        share tasks and courses that they have created, and is designed to make the jobs
-                        of both teachers and students easier by providing easy ways to do things such as
-                        hand in assignments and provide updates on those assignments.
-                    </p>
-                </div>
-                <div class="modal-footer">
-                    <a class="btn btn-primary" data-dismiss="modal">Close</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% call modal('about', 'About') %}
+        <p>
+            This site is designed to be a collaborative elearning site where teachers can
+            share tasks and courses that they have created, and is designed to make the jobs
+            of both teachers and students easier by providing easy ways to do things such as
+            hand in assignments and provide updates on those assignments.
+        </p>
+    {% endcall %}
+
+
+    {% call modal('login', 'Login', '/login', 'Login') %}
+        {{ input('email', 'Email', 'email', 'emailLogin', 'Enter Email') }}
+        {{ input('password', 'Password', 'pwd', 'pwdLogin', 'Enter Password') }}
+    {% endcall %}
+
+    {% call modal('register', 'Sign Up', '/register', 'Register') %}
+        {{ input('email', 'Email', 'email', 'emailLogin', 'Enter Email') }}
+        {{ input('password', 'Password', 'pwd', 'pwdLogin', 'Enter Password') }}
+    {% endcall %}
 </body>
 </html>

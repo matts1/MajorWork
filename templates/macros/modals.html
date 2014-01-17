@@ -1,0 +1,28 @@
+{% macro modal(id='', title='', action=None, btn=None) %}
+    <div class="modal fade" id="{{ id }}" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            {% if action != None %}
+                <form role="form" class="form-horizontal" action="{{ action }}">
+            {% endif %}
+            <div class="modal-header">
+                <h3>{{ title }}</h3>
+            </div>
+            <div class="modal-body">
+                {{ caller() }}
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-{{ 'primary' if btn == None else 'default'}}" data-dismiss="modal">
+                    {{ 'Close' if action == None else 'Cancel' }}
+                </a>
+                {% if btn != None %}
+                    <a type="submit" class="btn btn-primary">{{ btn }}</a>
+                {% endif %}
+            </div>
+            {% if action != None %}
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endmacro %}
