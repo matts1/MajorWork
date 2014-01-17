@@ -23,14 +23,19 @@
             </button>
             <div class="collapse navbar-collapse navHeaderCollapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/">Home</a></li>
-                    <li><a href="#about" data-toggle="modal">About</a></li>
-                    <li><a href="#contact" data-toggle="modal">Contact Us</a></li>
-                    {% if user %}
-                        <li>Welcome, {{ user.nickname() }}</li>
-                    {% else %}
+                    <li><a href="/{{ 'home' if user != None else '' }}">Home</a></li>
+                    <li><a href="mailto:mattstark75@gmail.com?Subject=Major%20Work" target="_top">Contact Us</a></li>
+                    {% if user == None %}
                         <li><a href="#login" data-toggle="modal">Login</a></li>
                         <li><a href="#register" data-toggle="modal">Sign Up</a></li>
+                    {% else %}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, {{ user.email }} <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/profile">Profile</a></li>
+                                <li><a href="/logout">Logout</a></li>
+                            </ul>
+                        </li>
                     {% endif %}
                 </ul>
             </div>
@@ -40,12 +45,17 @@
     <div class="container">
     </div>
     {% block content %}ADD SOME CONTENT{% endblock %}
+    <noscript>
+        For full functionality of this site it is necessary to enable JavaScript.
+        Here are the <a href="http://www.enable-javascript.com/" target="_newtab">
+        instructions how to enable JavaScript in your web browser</a>.
+    </noscript>
 
     <nav class="navbar navbar-default navbar-static-bottom footer">
         <div class="container">
             <img src="/images/html5.png" class="navbar-text text-center" alt="html5 valid">
             <img src="/images/css3.png" class="navbar-text text-center" alt="css3 valid">
-            <p class="navbar-text text-left">Site Designed And Built By Matthew Stark</p>
+            <p class="navbar-text text-left">Site Designed And Created By Matthew Stark</p>
             <a class="navbar-btn btn-danger btn pull-right">Button Here</a>
         </div>
     </nav>
@@ -53,16 +63,6 @@
     <script src="/js/jquery-2.0.3.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/page.js"></script>
-
-    {% call modal('about', 'About') %}
-        <p>
-            This site is designed to be a collaborative elearning site where teachers can
-            share tasks and courses that they have created, and is designed to make the jobs
-            of both teachers and students easier by providing easy ways to do things such as
-            hand in assignments and provide updates on those assignments.
-        </p>
-    {% endcall %}
-
 
     {% call modal('login', 'Login', '/login', 'Login') %}
         {{ input('email', 'Email', 'email', 'emailLogin', 'Enter Email') }}
@@ -72,7 +72,21 @@
     {% call modal('register', 'Sign Up', '/register', 'Register') %}
         {{ input('email', 'Email', 'email', 'emailRegister', 'Enter Email') }}
         {{ input('password', 'Password', 'pwd', 'pwdRegister', 'Enter Password') }}
-        {{ input('password', 'Confirm Password', 'confpwdd', 'confpwdRegister', 'Enter password') }}
+        {{ input('password', 'Confirm Password', 'confpwd', 'confpwdRegister', 'Enter password') }}
     {% endcall %}
+
+    {% if err is defined %}
+    <div class="openmodal hidden" id="{{ outerid }}"></div>
+    <dl class="errlist hidden">
+        {% for key, val in err.iteritems() %}
+            <div><dt>{{ '' if key == None else key }}</dt><dd>{{ val }}</dd></div>
+        {% endfor %}
+    </dl>
+    <dl class="origvals hidden"">
+        {% for key, val in origvals.iteritems() %}
+            <div><dt>{{ key }}</dt><dd>{{ val }}</dd></div>
+        {% endfor %}
+    </dl>
+    {% endif %}
 </body>
 </html>

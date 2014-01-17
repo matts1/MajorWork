@@ -3,7 +3,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             {% if action != None %}
-                <form role="form" class="form-horizontal" action="{{ action }}">
+                <form role="form" class="form-horizontal" method="post" action="{{ action }}">
             {% endif %}
             <div class="modal-header">
                 <h3>{{ title }}</h3>
