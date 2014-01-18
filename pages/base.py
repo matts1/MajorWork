@@ -11,6 +11,10 @@ class BaseHandler(webapp2.RequestHandler):
     formid = None
     require_login = True
     def do_request(self, fn):
+        """
+        called on any request, both GET and POST, with a function to execute.
+        The function changes based on the method
+        """
         self.user = self.get_user()
         if self.allowed():
             self.to_write = True
@@ -39,20 +43,36 @@ class BaseHandler(webapp2.RequestHandler):
         pass
 
     def redirect(self, *args, **kwargs):
+        """
+        Redirects the user to another page. Also stops the current page from
+        outputting HTML to the user, so we only get one page
+        """
         self.to_write = False
         return webapp2.RequestHandler.redirect(self, *args, **kwargs)
 
     def get_data(self, *args):
+        """
+        Gets the form data specified, and gets ready to fill it in to the
+        next form if this form doesn't work. Don't use it for passwords
+        """
         self.attrs = args
         for arg in args:
             setattr(self, arg, self.request.get(arg))
 
     def get_user(self):
+        """
+        Gets the current user that is logged on based on session data
+        """
         sessionID = self.get_cookie("session")
         if sessionID is not None:
-            return models.users.User.all().filter("session =", sessionID).get()
+            return models.users.User.all().filter("session =", sessionID) \
+                .filter("session_expiry >", datetime.datetime.now()).get()
 
     def allowed(self):
+        """
+        Checks whether the user is allowed on the current page. If they aren't,
+        redirect them to the appropriate page
+        """
         if self.require_login is None:
             return True
         elif self.require_login == True:
@@ -69,6 +89,10 @@ class BaseHandler(webapp2.RequestHandler):
                 return True
 
     def adderr(self, data):
+        """
+        Use for database functions which return their error message.
+        Adds the error message to a list of errors, which will automatically populate
+        """
         if isinstance(data, tuple):
             self.err[data[0]] = data[1]
         elif isinstance(data, dict):
@@ -77,8 +101,10 @@ class BaseHandler(webapp2.RequestHandler):
             self.err[None] = data
         return data
 
-
     def output(self, data, template=None):
+        """
+        Outputs to a specified template the data given. Called from do_request normally
+        """
         if self.to_write:
             data["user"] = self.user
             template = self.template if template is None else template
@@ -90,12 +116,16 @@ class BaseHandler(webapp2.RequestHandler):
                                         domain=domain)
     
     def clear_all_cookies(self):
-        """Deletes all the cookies the user sent with this request."""
+        """
+        Deletes all the cookies the user sent with this request.
+        """
         for name in self.cookies.iterkeys():
             self.clear_cookie(name)
     
     def get_cookie(self,name,default=None):
-        """Gets the value of the cookie with the given name,else default."""
+        """
+        Gets the value of the cookie with the given name,else default.
+        """
         if name in self.request.cookies:
             return self.request.cookies[name]
         return default

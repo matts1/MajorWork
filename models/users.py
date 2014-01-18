@@ -1,4 +1,5 @@
 import time
+import datetime
 from models.tests import TestCase
 from google.appengine.ext import db
 import os
@@ -18,6 +19,7 @@ class User(db.Model):
     salt = db.StringProperty(required=True)
 
     session = db.StringProperty(required=False, default=None)
+    session_expiry = db.DateTimeProperty(required=False, default=None)
         
     @classmethod
     def authenticate(cls, handler, email, pwd):
@@ -27,21 +29,24 @@ class User(db.Model):
             if hashed != user.pwd:
                 return "Incorrect Password"
         else:
-            return email + " does not exist in our database"
+            return "%s does not exist in our database. If you need an account, click <a href='%s'>here</a>" % (email, REGISTER_URL)
         user.login(handler)
 
     @classmethod
     def register(cls, handler, email, pwd, confpwd, fname, lname):
+        errs = {}
         if not is_name(fname):
-            return ('fname', 'The first name must be a valid name (hyphens and letters only, must start and end with a letter)')
+            errs['fname'] = 'The first name must be a valid name (hyphens and letters only, must start and end with a letter)'
         if not is_name(lname):
-            return ('lname', 'The surname must be a valid name (hyphens and letters only, must start and end with a letter)')
+            errs['lname'] = 'The surname must be a valid name (hyphens and letters only, must start and end with a letter)'
         if not all((pwd, confpwd, is_email(email))):
-            return '' # client side error messages
+            errs[None] = '' # client side error messages
         if pwd != confpwd:
-            return 'Your passwords were different'
+            errs[None] = 'Your passwords were different'
         if cls.all().filter('email =', email).get():
-            return ('email', email + ' is already in our database')
+            errs['email'] = email + ' is already in our database'
+        if errs:
+            return errs
         salt = os.urandom(50).encode('hex')
         pwd = encrypt(pwd, salt)
         user = cls(email=email, pwd=pwd, fname=fname.title(), lname=lname.title(), salt=salt)
@@ -50,6 +55,7 @@ class User(db.Model):
     
     def login(self, handler):
         self.session = os.urandom(100).encode('hex')
+        self.session_expiry = datetime.datetime.now() + datetime.timedelta(days=SESSION_NUM_DAYS)
         self.put()
         if hasattr(handler, 'set_cookie'): # so it doesn't fail in tests
             handler.set_cookie('session', self.session)

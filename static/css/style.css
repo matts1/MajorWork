@@ -1,3 +1,13 @@
 .has-error {
     color: #a94442;
 }
+
+.jumbotron .btn-xlg {
+    margin: auto 10px;
+    width: 150px;
+    padding-top:20px;
+    padding-bottom: 20px;
+    font-size:26px;
+    line-height:1.33;
+    border-radius:6px;
+}

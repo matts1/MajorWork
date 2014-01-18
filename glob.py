@@ -12,3 +12,11 @@ LOGIN_URL = '/login'
 REGISTER_URL = '/register'
 LOGOUT_URL = '/logout'
 HOME_URL = '/home'
+PROFILE_URL = '/profile'
+
+# put all our *_URL variables into the template
+for variable, content in locals().items():
+    if variable.endswith("_URL"):
+        JINJA_ENVIRONMENT.globals[variable[:-4]] = content
+
+SESSION_NUM_DAYS = 7
