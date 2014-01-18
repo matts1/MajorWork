@@ -1,5 +1,5 @@
 {% from '/macros/modals.html' import modal %}
-{% from '/macros/forms.html' import input %}
+{% from '/macros/forms.html' import input,form %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -33,6 +33,7 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, {{ user.fname }} <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ PROFILE }}">Profile</a></li>
+                                <li><a href="{{ SETTINGS }}">Settings</a></li>
                                 <li><a href="{{ LOGOUT }}">Logout</a></li>
                             </ul>
                         </li>
@@ -90,6 +91,10 @@
             <div><dt>{{ key }}</dt><dd>{{ val }}</dd></div>
         {% endfor %}
     </dl>
+    {% endif %}
+
+    {% if success is defined %}
+        <div class="hidden successmsg" for="{{ outerid }}">{{ success }}</div>
     {% endif %}
 </body>
 </html>

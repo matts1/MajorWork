@@ -1,15 +1,16 @@
 import webapp2
-import glob
+import globals
 import datetime
 import models
 import Cookie
 
-from glob import LOGIN_URL, HOME_URL
+from globals import LOGIN_URL, HOME_URL
 
 class BaseHandler(webapp2.RequestHandler):
     template = '/base.html'
     formid = None
     require_login = True
+    success_msg = None
     def do_request(self, fn):
         """
         called on any request, both GET and POST, with a function to execute.
@@ -19,6 +20,7 @@ class BaseHandler(webapp2.RequestHandler):
         if self.allowed():
             self.to_write = True
             self.err = {}
+            self.attrs = {}
             res = fn()
             if res is None:
                 res = {}
@@ -28,12 +30,17 @@ class BaseHandler(webapp2.RequestHandler):
                 res['outerid'] = self.formid
                 res['origvals'] = {field: getattr(self, field) for field in self.attrs}
                 res['err'] = self.err
+            elif self.using_post and self.success_msg is not None:
+                res['outerid'] = self.formid
+                res['success'] = self.success_msg
             self.output(res)
 
     def get(self):
+        self.using_post = False
         self.do_request(self.myget)
 
     def post(self):
+        self.using_post = True
         self.do_request(self.mypost)
 
     def myget(self):
@@ -108,7 +115,7 @@ class BaseHandler(webapp2.RequestHandler):
         if self.to_write:
             data["user"] = self.user
             template = self.template if template is None else template
-            self.response.write(glob.JINJA_ENVIRONMENT.get_template(template).render(**data))
+            self.response.write(globals.JINJA_ENVIRONMENT.get_template(template).render(**data))
 
     def clear_cookie(self,name,path="/",domain=None):
         expires = datetime.datetime.utcnow() - datetime.timedelta(days=365)

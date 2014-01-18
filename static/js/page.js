@@ -5,8 +5,18 @@ $(document).ready(function () {
 
     // Open up old modal if the form wasn't filled out correctly
     $('div.openmodal').each(function () {
-        $('#' + this.id).modal({show: true});
+        var element = $('#' + this.id);
+        if (element.hasClass('modal')) {
+            element.modal({show: true});
+        }
     });
+
+    // Add in a success message
+    $('div.successmsg').each(function () {
+        var form = $($('#' + $(this).attr('for'))[0]);
+        insertAfterLastInput('<p class="help-block text-success">' + $(this).text() + '</p>', form);
+    })
+
 
     // get the id of the container of the form
     var outerlayer = $($("body")[0]);
@@ -27,14 +37,20 @@ $(document).ready(function () {
         var name = $('dt', this).text();
         var msg = $('dd', this).text();
         if (name == '') {
-            var on = $('.modal-body', outerlayer);
-            on.append('<div class="text-center"><span class="help block has-error">' +
-                msg + '</span></div>');
+            insertAfterLastInput('<span class="help block text-danger">' +
+                msg + '</span>', outerlayer);
         } else {
             var on = $('input[name=' + name + ']', outerlayer).parent();
             on.parent().addClass('has-error');
-            on.append('<span class="help block">' + msg + '</span>');
-            console.log(on);
+            on.append('<p class="help-block">' + msg + '</p>');
         }
     });
 });
+
+function insertAfterLastInput(data, container) {
+    // all inputs other than submit
+    var on = $('input:not([type=submit])', container);
+    // get the last input, then go up 2 levels to get the div input is in
+    on = $(on[on.length - 1]).parent().parent();
+    on.after('<div class="text-center help-block">' + data + '</div>');
+}

@@ -13,6 +13,7 @@ REGISTER_URL = '/register'
 LOGOUT_URL = '/logout'
 HOME_URL = '/home'
 PROFILE_URL = '/profile'
+SETTINGS_URL = '/settings'
 
 # put all our *_URL variables into the template
 for variable, content in locals().items():

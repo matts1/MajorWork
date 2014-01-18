@@ -1,4 +1,4 @@
-from glob import LOGOUT_URL
+from globals import LOGOUT_URL
 from models.users import User
 from pages.base import BaseHandler
 

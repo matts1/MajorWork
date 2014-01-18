@@ -7,3 +7,22 @@
         </div>
     </div>
 {% endmacro %}
+
+{% macro attr(name, value) %}
+    {% if value != None %}
+        {{ name }}="{{ value }}"
+    {% endif %}
+{% endmacro %}
+
+{% macro form(name, id=None, action=None) %}
+    <form role="form" class="form-horizontal" method="post" class="text-center"
+            {{ attr("id", id) }} {{ attr("action", action) }}>
+        {% if id != None %}
+            <input type="hidden" name="whichform" value="{{ id }}">
+        {% endif %}
+        {{ caller() }}
+        <div class="form-actions">
+            <input type="submit" value="{{ name }}" class="btn btn-primary">
+        </div>
+    </form>
+{% endmacro %}

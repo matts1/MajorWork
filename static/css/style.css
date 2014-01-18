@@ -2,6 +2,13 @@
     color: #a94442;
 }
 
+/* center any form actions within said form */
+.form-actions {
+    margin: 0;
+    text-align: center;
+}
+
+/* make a format for an xl button on the home page */
 .jumbotron .btn-xlg {
     margin: auto 10px;
     width: 150px;
@@ -10,4 +17,10 @@
     font-size:26px;
     line-height:1.33;
     border-radius:6px;
+}
+
+/* move the footer 30px down. It's too close to the top */
+.footer {
+    position: relative;
+    top: 30px;
 }

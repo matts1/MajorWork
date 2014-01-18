@@ -1,4 +1,4 @@
-from glob import HOME_URL
+from globals import HOME_URL
 from models.users import User
 from pages.base import BaseHandler
 
