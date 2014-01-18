@@ -17,10 +17,9 @@ handlers = [
     (HOME_URL, CourseHandler),
 ]
 
-settings = dict(
-    debug='debug' in sys.argv[1:],
-)
-
 print('--------------------')
-app = webapp2.WSGIApplication(handlers, **settings)
+app = webapp2.WSGIApplication(
+    handlers,
+    debug=True,
+)
 
