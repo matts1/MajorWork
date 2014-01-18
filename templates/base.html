@@ -30,7 +30,7 @@
                         <li><a href="#register" data-toggle="modal">Sign Up</a></li>
                     {% else %}
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, {{ user.email }} <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, {{ user.fname }} <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="/profile">Profile</a></li>
                                 <li><a href="/logout">Logout</a></li>
@@ -72,7 +72,9 @@
         {% call modal('register', 'Sign Up', '/register', 'Register') %}
             {{ input('email', 'Email', 'email', 'emailRegister', 'Enter Email') }}
             {{ input('password', 'Password', 'pwd', 'pwdRegister', 'Enter Password') }}
-            {{ input('password', 'Confirm Password', 'confpwd', 'confpwdRegister', 'Enter password') }}
+            {{ input('password', 'Confirm Password', 'confpwd', 'confpwdRegister', 'Enter Password') }}
+            {{ input('text', 'First Name', 'fname', 'fnameRegister', 'Enter First Name') }}
+            {{ input('text', 'Surname', 'lname', 'lnameRegister', 'Enter Surname') }}
         {% endcall %}
     {% endif %}
 

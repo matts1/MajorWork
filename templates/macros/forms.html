@@ -3,7 +3,7 @@
         <label for="{{ id }}" class="col-lg-4 control-label">{{ label }}</label>
         <div class="col-lg-7">
             <input type="{{ type }}" class="form-control" id="{{ id }}"
-               placeholder="{{ placeholder }}" name="{{ name }}" required="{{ required }}">
+               placeholder="{{ placeholder.title() }}" name="{{ name }}" required="{{ required }}">
         </div>
     </div>
 {% endmacro %}

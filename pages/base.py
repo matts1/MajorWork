@@ -68,6 +68,16 @@ class BaseHandler(webapp2.RequestHandler):
             else:
                 return True
 
+    def adderr(self, data):
+        if isinstance(data, tuple):
+            self.err[data[0]] = data[1]
+        elif isinstance(data, dict):
+            self.err.update(data)
+        elif isinstance(data, str):
+            self.err[None] = data
+        return data
+
+
     def output(self, data, template=None):
         if self.to_write:
             data["user"] = self.user
