@@ -27,14 +27,18 @@
                         <li><a href="">SEARCH HERE</a></li>
                     {% endif %}
                     <li><a href="{{ HOME if user != None else INDEX }}">Home</a></li>
-                    <li><a href="mailto:mattstark75@gmail.com?Subject=Kno" target="_top">Contact Us</a></li>
+                    <li><a href="mailto:mattstark75@gmail.com?Subject=Kno" target="_top">
+                        Contact Us
+                    </a></li>
                     {% if user == None %}
                         <li><a href="#forgot" data-toggle="modal">Reset Password</a></li>
                         <li><a href="#login" data-toggle="modal">Login</a></li>
                         <li><a href="#register" data-toggle="modal">Sign Up</a></li>
                     {% else %}
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, {{ user.fname }} <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                Welcome, {{ user.fname }} <b class="caret"></b>
+                            </a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ PROFILE }}">Profile</a></li>
                                 <li><a href="{{ SETTINGS }}">Settings</a></li>
@@ -68,6 +72,7 @@
     </nav>
 
     <script src="/js/jquery-2.0.3.min.js"></script>
+    <script src="/js/formplugin.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/page.js"></script>
 
@@ -92,21 +97,9 @@
 
     {% endif %}
 
-    {% if err is defined %}
-    <div class="openmodal hidden" id="{{ outerid }}"></div>
-    <div class="errlist hidden">
-        {% for key, val in err.iteritems() %}
-            <div><p>{{ '' if key == None else key }}</p><span>{{ val }}</span></div>
-        {% endfor %}
-    </div>
-    <div class="origvals hidden">
-        {% for key, val in origvals.iteritems() %}
-            <div><p>{{ key }}</p><span>{{ val }}</span></div>
-        {% endfor %}
-    </div>
-    {% elif success is defined %}
-        <div class="openmodal hidden" id="{{ outerid }}"></div>
-        <div class="hidden successmsg" data-formid="{{ outerid }}">{{ success }}</div>
+    {% if formid != None %}
+        <div class="openmodal hidden" id="{{ formid }}"></div>
     {% endif %}
+
 </body>
 </html>

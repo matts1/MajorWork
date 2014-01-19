@@ -11,6 +11,9 @@
             </div>
             <div class="modal-body">
                 {{ caller() }}
+                {% if action != None %}
+                    <div class="formresults text-center help-block"></div>
+                {% endif %}
             </div>
             <div class="modal-footer">
                 <a class="btn btn-{{ 'primary' if btn == None else 'default'}}" data-dismiss="modal">

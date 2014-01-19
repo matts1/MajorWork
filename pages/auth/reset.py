@@ -39,5 +39,4 @@ class ResetPwdHandler(BaseHandler):
             self.request.get('pwd'),
             self.request.get('confpwd')
         ))
-        print self.err
         return {'reset_code': code}

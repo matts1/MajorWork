@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    // Highlight current link
+    // Highlight current link in navbar
     $('nav.header li').removeClass('active');
     $('nav.header li:has(a[href="' + document.location.pathname + '"])').addClass('active');
 
@@ -12,49 +12,41 @@ $(document).ready(function () {
         }
     });
 
-    // Add in a success message
-    $('div.successmsg').each(function () {
-        var form = $($('#' + $(this).attr('data-formid'))[0]);
-        insertAfterLastInput('<div class="alert alert-success">' + $(this).text() + '</div>', form);
-    });
+    $('form').ajaxForm({
+        beforeSubmit: function (arr, form, options) {
+            // delete the old error messages from the screen
+            $('[data-submitted=true]', form).remove();
 
-
-    // get the id of the container of the form
-    var outerlayer = $($("body")[0]);
-    //noinspection JSJQueryEfficiency
-    if (!($('div.openmodal')[0] === undefined)) {
-        outerlayer = $('#' + $('div.openmodal')[0].id);
-    }
-
-    // Fill in the old values in the form
-    $('div.origvals div').each(function () {
-        var name = $('p', this).text();
-        var on = $('input[name=' + name + ']', outerlayer);
-        var msg = $('span', this).text();
-        on.attr('value', msg);
-    });
-
-    // Fill in the error messages telling them what they did wrong
-    $('div.errlist div').each(function () {
-        var name = $('p', this).text();
-        var msg = $('span', this).text();
-        if (msg != '') {
-            if (name == '') {
-                insertAfterLastInput('<div class="alert alert-danger">' +
-                    msg + '</div>', outerlayer);
-            } else {
-                var on = $('input[name=' + name + ']', outerlayer).parent();
-                on.parent().addClass('has-error');
-                on.append('<div class="alert alert-danger">' + msg + '</div>');
+            // add a loading icon
+            insertAfterLastInput('<img src="/images/loading.gif" alt="loading">', form);
+        },
+        success: function (responseText, statusText, xhr, form) {
+            if (responseText.length > 9 && responseText.substring(0,9) == 'REDIRECT:') {
+                window.location = window.location.origin + responseText.substring(9);
             }
+            // remove the loading icon if it exists
+            insertAfterLastInput('', form);
+
+            // this line fixes a bug where you can't search for the outermost tag, so we wrap it
+            responseText = '<nav>' + responseText + '</nav>';
+
+            // Fill in the error messages with the response from the server
+            $('div', $(responseText)).each(function () {
+                var name = $(this).attr('data-for');
+                var msg = $(this.outerHTML);
+                msg.attr('data-submitted', 'true');
+                if (name == '') {
+                    insertAfterLastInput(msg[0].outerHTML, form);
+                } else {
+                    $('input[name=' + name + ']', form).parent().parent().after(msg);
+                }
+            });
         }
     });
+
 });
 
 function insertAfterLastInput(data, container) {
     // all inputs other than submit
-    var on = $('input:not([type=submit])', container);
-    // get the last input, then go up 2 levels to get the div input is in
-    on = $(on[on.length - 1]).parent().parent();
-    on.after('<div class="text-center help-block">' + data + '</div>');
+    $('div.formresults', container).html('<div class="text-center help-block">' + data + '</div>');
 }

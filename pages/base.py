@@ -30,13 +30,7 @@ class BaseHandler(webapp2.RequestHandler):
                 res = {}
             if self.err.get(None, 1) is None:
                 del self.err[None]
-            if self.err:
-                res['outerid'] = self.formid
-                res['origvals'] = self.attrs
-                res['err'] = self.err
-            elif self.using_post and self.success_msg is not None:
-                res['outerid'] = self.formid
-                res['success'] = self.success_msg
+            res['formid'] = self.formid
             self.output(res)
 
     def get(self):
@@ -53,13 +47,18 @@ class BaseHandler(webapp2.RequestHandler):
     def mypost(self):
         pass
 
-    def redirect(self, *args, **kwargs):
+    def redirect(self, url, *args, **kwargs):
         """
         Redirects the user to another page. Also stops the current page from
         outputting HTML to the user, so we only get one page
         """
         self.to_write = False
-        return webapp2.RequestHandler.redirect(self, *args, **kwargs)
+        if self.using_post:
+            # we issued a redirect, but we're using post, not get.
+            # because we're using ajax I need to issue a different response
+            self.response.write('REDIRECT:' + url)
+        else:
+            return webapp2.RequestHandler.redirect(self, url, *args, **kwargs)
 
     def get_data(self, *args):
         """
@@ -116,9 +115,18 @@ class BaseHandler(webapp2.RequestHandler):
         Outputs to a specified template the data given. Called from do_request normally
         """
         if self.to_write:
-            data['user'] = self.user
-            template = self.template if template is None else template
-            self.response.write(globals.JINJA_ENVIRONMENT.get_template(template).render(**data))
+            if self.using_post:
+                if self.err:
+                    for key, val in self.err.items():
+                        self.response.write('<div class="alert alert-danger" data-for="%s">%s</div>' %
+                                            ('' if key is None else key, val))
+                else:
+                    self.response.write('<div class="alert alert-success" data-for="">%s</div>' %
+                                        self.success_msg)
+            else:
+                data['user'] = self.user
+                template = self.template if template is None else template
+                self.response.write(globals.JINJA_ENVIRONMENT.get_template(template).render(**data))
 
     def clear_cookie(self, name, path='/', domain=None):
         expires = datetime.datetime.utcnow() - datetime.timedelta(days=365)

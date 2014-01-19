@@ -86,11 +86,9 @@ class User(db.Model):
 
     @classmethod
     def do_reset(cls, code, newpwd, confpwd):
-        print code, newpwd, confpwd
         if not all((code, newpwd, confpwd)):
             return ''  # client side validation
         user = cls.all().filter('reset_code =', code).get()
-        print user
         if user is None:
             return 'The code you provided was wrong. Please check that you copied the url correctly'
         if newpwd != confpwd:

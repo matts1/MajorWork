@@ -21,8 +21,10 @@
             <input type="hidden" name="whichform" value="{{ id }}">
         {% endif %}
         {{ caller() }}
+            <div class="formresults text-center help-block"></div>
         <div class="form-actions">
             <input type="submit" value="{{ name }}" class="btn btn-primary">
         </div>
     </form>
 {% endmacro %}
+input:not[type=submit]
