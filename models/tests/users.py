@@ -1,7 +1,8 @@
-from models.tests.basetest import TestCase
+from models.tests.basetest import BaseTestCase
 from models.users import User
 
-class UserTest(TestCase):
+
+class UserBaseTest(BaseTestCase):
     def test_bad_register(self):
         self.assertIsNotNone(
             User.register(None, 'matt@gmail.com', 'pwd', 'diffpwd', 'first', 'last'),
@@ -44,11 +45,11 @@ class UserTest(TestCase):
 
     def test_register_login(self):
         self.assertIsNotNone(
-            User.authenticate(None, 'matt@gmail.com', 'correcthorsebatterystaple'),
+            User.authenticate(None, 'matt@gmail.com', 'correcthorse'),
             'Try to login with an email that doesn\'t exist'
         )
         self.assertIsNone(
-            User.register(None, 'matt@gmail.com', 'correcthorsebatterystaple', 'correcthorsebatterystaple', 'matt', 'stark'),
+            User.register(None, 'matt@gmail.com', 'correcthorse', 'correcthorse', 'matt', 'stark'),
             'Register an account'
         )
         self.assertIsNotNone(
@@ -56,7 +57,7 @@ class UserTest(TestCase):
             'Attempt to register an account when the name is already taken'
         )
         self.assertIsNone(
-            User.authenticate(None, 'matt@gmail.com', 'correcthorsebatterystaple'),
+            User.authenticate(None, 'matt@gmail.com', 'correcthorse'),
             'Login with valid username and password'
         )
         self.assertIsNotNone(

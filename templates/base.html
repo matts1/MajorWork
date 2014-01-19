@@ -58,9 +58,12 @@
 
     <nav class="navbar navbar-default navbar-static-bottom footer">
         <div class="container">
-            <img src="/images/html5.png" class="navbar-text text-left" alt="html5 valid">
-            <p class="navbar-text text-center">Site Designed And Created By Matthew Stark</p>
-            <img src="/images/css3.png" class="navbar-text text-right" alt="css3 valid">
+            <ul class="nav navbar-nav navbar-left"><li>
+                <img src="/images/html5.png" class="navbar-text text-left" alt="html5 valid">
+            </li></ul>
+            <ul class="nav navbar-nav navbar-right"><li>
+                <img src="/images/css3.png" class="navbar-text text-right" alt="css3 valid">
+            </li></ul>
         </div>
     </nav>
 
@@ -91,19 +94,19 @@
 
     {% if err is defined %}
     <div class="openmodal hidden" id="{{ outerid }}"></div>
-    <dl class="errlist hidden">
+    <div class="errlist hidden">
         {% for key, val in err.iteritems() %}
-            <div><dt>{{ '' if key == None else key }}</dt><dd>{{ val }}</dd></div>
+            <div><p>{{ '' if key == None else key }}</p><span>{{ val }}</span></div>
         {% endfor %}
-    </dl>
-    <dl class="origvals hidden"">
+    </div>
+    <div class="origvals hidden">
         {% for key, val in origvals.iteritems() %}
-            <div><dt>{{ key }}</dt><dd>{{ val }}</dd></div>
+            <div><p>{{ key }}</p><span>{{ val }}</span></div>
         {% endfor %}
-    </dl>
+    </div>
     {% elif success is defined %}
         <div class="openmodal hidden" id="{{ outerid }}"></div>
-        <div class="hidden successmsg" for="{{ outerid }}">{{ success }}</div>
+        <div class="hidden successmsg" data-formid="{{ outerid }}">{{ success }}</div>
     {% endif %}
 </body>
 </html>

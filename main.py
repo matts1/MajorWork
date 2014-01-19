@@ -1,5 +1,3 @@
-import os
-import sys
 import webapp2
 from globals import *
 
@@ -27,4 +25,3 @@ app = webapp2.WSGIApplication(
     handlers,
     debug=True,
 )
-

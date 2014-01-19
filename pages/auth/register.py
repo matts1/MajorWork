@@ -7,6 +7,7 @@ class RegisterHandler(BaseHandler):
     formid = 'register'
     require_login = False
     template = 'index.html'
+
     def myget(self):
         # chuck an invisible error on the form - should bring up the form
         self.get_data()
@@ -17,11 +18,11 @@ class RegisterHandler(BaseHandler):
 
         if not self.adderr(User.register(
                 self,
-                self.email,
+                self.attrs['email'],
                 self.request.get('pwd'),
                 self.request.get('confpwd'),
-                self.fname,
-                self.lname
-            )):
+                self.attrs['fname'],
+                self.attrs['lname']
+        )):
             # all good, try and login for them
             self.redirect(HOME_URL)

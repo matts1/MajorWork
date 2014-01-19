@@ -2,7 +2,7 @@ from unittest import TestCase
 from google.appengine.ext import testbed
 
 
-class TestCase(TestCase):
+class BaseTestCase(TestCase):
     def setUp(self):
         self.testbed = testbed.Testbed()
         self.testbed.activate()

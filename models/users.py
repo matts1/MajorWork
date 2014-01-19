@@ -1,19 +1,21 @@
 import datetime
 from google.appengine.api import mail
 from google.appengine.ext import db
-import os
+
+from os import urandom
 import hashlib
-import urllib
+
 from globals import *
 from models.validators import is_email, is_name
 
 
 def encrypt(pwd, salt=None):
     if salt is None:
-        salt = os.urandom(50).encode('hex')
-        return (hashlib.sha512(salt + pwd).hexdigest().encode('hex'), salt)
+        salt = urandom(50).encode('hex')
+        return hashlib.sha512(salt + pwd).hexdigest().encode('hex'), salt
     else:
         return hashlib.sha512(salt + pwd).hexdigest().encode('hex')
+
 
 class User(db.Model):
     email = db.StringProperty(required=True)
@@ -35,20 +37,23 @@ class User(db.Model):
             if hashed != user.pwd:
                 return 'Incorrect Password'
         else:
-            return '%s does not exist in our database. If you need an account, click <a href=\'%s\'>here</a>' % (email, REGISTER_URL)
+            return ('%s does not exist in our database. If you need an account, '
+                    'click <a href=\'%s\'>here</a>' % (email, REGISTER_URL))
         user.login(handler)
 
     @classmethod
     def register(cls, handler, email, pwd, confpwd, fname, lname):
         errs = {}
         if not is_name(fname):
-            errs['fname'] = 'The first name must be a valid name (hyphens and letters only, must start and end with a letter)'
+            errs['fname'] = ('The first name must be a valid name (hyphens and letters only, '
+                             'must start and end with a letter)')
         if not is_name(lname):
-            errs['lname'] = 'The surname must be a valid name (hyphens and letters only, must start and end with a letter)'
+            errs['lname'] = ('The surname must be a valid name (hyphens and letters only, '
+                             'must start and end with a letter)')
         if not is_email(email):
             errs['email'] = 'Your email is invalid'
         if not all((pwd, confpwd)):
-            errs[None] = '' # client side validation
+            errs[None] = ''  # client side validation
         if pwd != confpwd:
             errs[None] = 'Your passwords were different'
         if cls.all().filter('email =', email).get():
@@ -63,11 +68,11 @@ class User(db.Model):
     @classmethod
     def setup_reset(cls, email, send_email=False):
         if email is None:
-            return '' # client side error
+            return ''  # client side validation
         user = cls.all().filter('email =', email).get()
         if user is None:
             return 'There is no user with the email ' + email
-        user.reset_code = os.urandom(50).encode('hex')
+        user.reset_code = urandom(50).encode('hex')
         user.put()
         if send_email:
             user.send_mail(
@@ -75,14 +80,15 @@ class User(db.Model):
                 'A password reset has been requested for %s %s on %s.\n'
                 'If you did not request the reset, don\'t worry, your account is still secure.\n\n'
                 'To reset your password go to the following URL.\n'
-                'http://%s/doreset?code=%s' % (user.fname, user.lname, WEBSITE_URL, WEBSITE_URL, user.reset_code)
+                'http://%s/doreset?code=%s' %
+                (user.fname, user.lname, WEBSITE_URL, WEBSITE_URL, user.reset_code)
             )
 
     @classmethod
     def do_reset(cls, code, newpwd, confpwd):
         print code, newpwd, confpwd
         if not all((code, newpwd, confpwd)):
-            return '' # client side error
+            return ''  # client side validation
         user = cls.all().filter('reset_code =', code).get()
         print user
         if user is None:
@@ -93,12 +99,11 @@ class User(db.Model):
         user.pwd, user.salt = encrypt(newpwd)
         user.put()
 
-
     def login(self, handler):
-        self.session = os.urandom(100).encode('hex')
+        self.session = urandom(100).encode('hex')
         self.session_expiry = datetime.datetime.now() + datetime.timedelta(days=SESSION_NUM_DAYS)
         self.put()
-        if hasattr(handler, 'set_cookie'): # so it doesn't fail in tests
+        if hasattr(handler, 'set_cookie'):  # so it doesn't fail in tests
             handler.set_cookie('session', self.session)
     
     def logout(self):
@@ -107,19 +112,18 @@ class User(db.Model):
 
     def chgpwd(self, oldpwd, newpwd, newpwdconf):
         if not all((oldpwd, newpwd, newpwdconf)):
-            return '' # client side error
+            return ''  # client side validation
         if encrypt(oldpwd, self.salt) != self.pwd:
             return 'Old password was incorrect'
         if newpwd != newpwdconf:
             return 'Your new passwords were different'
         if not newpwd:
-            return '' # client side validation
+            return ''  # client side validation
         self.pwd, self.salt = encrypt(newpwd)
         self.put()
 
     def gravatar(self, size):
         # http://en.gravatar.com/site/implement/images/python/
-        default = "http://www.example.com/default.jpg"
         return '<img src="http://www.gravatar.com/avatar/%s?d=identicon&s=%d" alt="gravatar">' % \
                (hashlib.md5(self.email.lower()).hexdigest(), size)
 
@@ -132,7 +136,7 @@ class User(db.Model):
             to='%s %s <%s>' % (self.fname, self.lname, self.email),
             subject='Kno: ' + subject,
             body=('Dear %s\n\n%s\n\n'
-                'Please contact us if you have any questions\n\n'
-                'The Kno Team'
-                 % (self.fname, body))
+                  'Please contact us if you have any questions\n\n'
+                  'The Kno Team'
+                   % (self.fname, body))
         )

@@ -1,8 +1,10 @@
 from pages.base import BaseHandler
 
+
 class SettingsHandler(BaseHandler):
     require_login = True
     template = 'user/settings.html'
+
     def mypost(self):
         # find out which form they filled in
         self.formid = self.request.get('whichform')

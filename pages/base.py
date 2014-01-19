@@ -1,16 +1,20 @@
+import calendar
+import email
 import webapp2
 import globals
 import datetime
-import models
 import Cookie
 
 from globals import LOGIN_URL, HOME_URL
+from models.users import User
+
 
 class BaseHandler(webapp2.RequestHandler):
     template = '/base.html'
     formid = None
     require_login = True
     success_msg = None
+
     def do_request(self, fn):
         """
         called on any request, both GET and POST, with a function to execute.
@@ -28,7 +32,7 @@ class BaseHandler(webapp2.RequestHandler):
                 del self.err[None]
             if self.err:
                 res['outerid'] = self.formid
-                res['origvals'] = {field: getattr(self, field) for field in self.attrs}
+                res['origvals'] = self.attrs
                 res['err'] = self.err
             elif self.using_post and self.success_msg is not None:
                 res['outerid'] = self.formid
@@ -62,18 +66,17 @@ class BaseHandler(webapp2.RequestHandler):
         Gets the form data specified, and gets ready to fill it in to the
         next form if this form doesn't work. Don't use it for passwords
         """
-        self.attrs = args
         for arg in args:
-            setattr(self, arg, self.request.get(arg))
+            self.attrs[arg] = self.request.get(arg)
 
     def get_user(self):
         """
         Gets the current user that is logged on based on session data
         """
-        sessionID = self.get_cookie("session")
-        if sessionID is not None:
-            return models.users.User.all().filter("session =", sessionID) \
-                .filter("session_expiry >", datetime.datetime.now()).get()
+        session_id = self.get_cookie('session')
+        if session_id is not None:
+            return User.all().filter('session =', session_id) \
+                .filter('session_expiry >', datetime.datetime.now()).get()
 
     def allowed(self):
         """
@@ -82,13 +85,13 @@ class BaseHandler(webapp2.RequestHandler):
         """
         if self.require_login is None:
             return True
-        elif self.require_login == True:
+        elif self.require_login:
             if self.user:
                 return True
             else:
                 self.redirect(LOGIN_URL)
                 return False
-        elif self.require_login == False:
+        elif not self.require_login:
             if self.user:
                 self.redirect(HOME_URL)
                 return False
@@ -113,23 +116,15 @@ class BaseHandler(webapp2.RequestHandler):
         Outputs to a specified template the data given. Called from do_request normally
         """
         if self.to_write:
-            data["user"] = self.user
+            data['user'] = self.user
             template = self.template if template is None else template
             self.response.write(globals.JINJA_ENVIRONMENT.get_template(template).render(**data))
 
-    def clear_cookie(self,name,path="/",domain=None):
+    def clear_cookie(self, name, path='/', domain=None):
         expires = datetime.datetime.utcnow() - datetime.timedelta(days=365)
-        self.set_cookie(name,value="",path=path,expires=expires,
-                                        domain=domain)
+        self.set_cookie(name, value='', path=path, expires=expires, domain=domain)
     
-    def clear_all_cookies(self):
-        """
-        Deletes all the cookies the user sent with this request.
-        """
-        for name in self.cookies.iterkeys():
-            self.clear_cookie(name)
-    
-    def get_cookie(self,name,default=None):
+    def get_cookie(self, name, default=None):
         """
         Gets the value of the cookie with the given name,else default.
         """
@@ -137,17 +132,17 @@ class BaseHandler(webapp2.RequestHandler):
             return self.request.cookies[name]
         return default
     
-    def set_cookie(self,name,value,domain=None,expires=None,path="/",expires_days=None):
+    def set_cookie(self, name, value, domain=None, expires=None, path='/', expires_days=None):
         new_cookie = Cookie.BaseCookie()
         new_cookie[name] = value
         if domain:
-            new_cookie[name]["domain"] = domain
+            new_cookie[name]['domain'] = domain
         if expires_days is not None and not expires:
             expires = datetime.datetime.utcnow() + datetime.timedelta(days=expires_days)
         if expires:
             timestamp = calendar.timegm(expires.utctimetuple())
-            new_cookie[name]["expires"] = email.utils.formatdate(timestamp,localtime=False,usegmt=True)
+            new_cookie[name]['expires'] = email.utils.formatdate(timestamp, localtime=False, usegmt=True)
         if path:
-            new_cookie[name]["path"] = path
+            new_cookie[name]['path'] = path
         for morsel in new_cookie.values():
-            self.response.headers.add_header('Set-Cookie',morsel.OutputString(None))
+            self.response.headers.add_header('Set-Cookie', morsel.OutputString(None))

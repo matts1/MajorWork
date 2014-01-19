@@ -1,8 +1,8 @@
-from models.tests.basetest import TestCase
+from models.tests.basetest import BaseTestCase
 from models.validators import is_email, is_alphabetic, is_name
 
 
-class TestValidators(TestCase):
+class BaseTestValidators(BaseTestCase):
     def test_email(self):
         self.assertTrue(is_email("mAt1234567890.!#$%&'*+-/=?^_`{|}~@gmail1234567890-.com"))
 
