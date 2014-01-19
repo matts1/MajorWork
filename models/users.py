@@ -128,7 +128,7 @@ class User(db.Model):
 
     def send_mail(self, subject, body):
         mail.send_mail(
-            sender='Kno Support <support@%s>' % WEBSITE_URL,
+            sender='Kno Support <support@%s>' % WEBSITE_EMAIL,
             to='%s %s <%s>' % (self.fname, self.lname, self.email),
             subject='Kno: ' + subject,
             body=('Dear %s\n\n%s\n\n'

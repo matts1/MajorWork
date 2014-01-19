@@ -25,3 +25,4 @@ for variable, content in locals().items():
 SESSION_NUM_DAYS = 7
 
 WEBSITE_URL = 'chsorganiser.appspot.com'
+WEBSITE_EMAIL = 'chsorganiser.appspotmail.com'
