@@ -17,4 +17,11 @@
             of both teachers and students easier by providing easy ways to do things such as
             hand in assignments and provide updates on those assignments.
     </p>-->
+    {% if reset_code is defined %}
+        {% call modal('doreset', 'Reset Password', RESET_PWD, 'Reset Password') %}
+            <input type="hidden" value="{{ reset_code }}" name="code">
+            {{ input('password', 'New Password', 'pwd', 'pwdDoReset', 'Enter New Password') }}
+            {{ input('password', 'Confirm Password', 'confpwd', 'confpwdDoReset', 'Enter New Password') }}
+        {% endcall %}
+    {% endif %}
 {% endblock %}

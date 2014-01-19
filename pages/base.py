@@ -104,7 +104,7 @@ class BaseHandler(webapp2.RequestHandler):
             self.err[data[0]] = data[1]
         elif isinstance(data, dict):
             self.err.update(data)
-        elif isinstance(data, str):
+        elif isinstance(data, str) or isinstance(data, unicode):
             self.err[None] = data
         return data
 

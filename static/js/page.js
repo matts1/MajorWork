@@ -14,7 +14,7 @@ $(document).ready(function () {
     // Add in a success message
     $('div.successmsg').each(function () {
         var form = $($('#' + $(this).attr('for'))[0]);
-        insertAfterLastInput('<p class="help-block text-success">' + $(this).text() + '</p>', form);
+        insertAfterLastInput('<p class="text-success">' + $(this).text() + '</p>', form);
     })
 
 
@@ -37,7 +37,7 @@ $(document).ready(function () {
         var name = $('dt', this).text();
         var msg = $('dd', this).text();
         if (name == '') {
-            insertAfterLastInput('<span class="help block text-danger">' +
+            insertAfterLastInput('<span class="text-danger">' +
                 msg + '</span>', outerlayer);
         } else {
             var on = $('input[name=' + name + ']', outerlayer).parent();

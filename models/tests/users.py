@@ -40,6 +40,7 @@ class UserTest(TestCase):
             'Attempt to register with another invalid email'
         )
         # don't test more invalid emails - validator is already tested
+        self.assertIsNotNone(User.register(None, None, None, None, None, None))
 
     def test_register_login(self):
         self.assertIsNotNone(
@@ -61,6 +62,41 @@ class UserTest(TestCase):
         self.assertIsNotNone(
             User.authenticate(None, 'matt@gmail.com', 'valid'),
             'Attempt to login with wrong password'
+        )
+        self.assertIsNotNone(User.authenticate(None, None, None))
+
+        self.assertIsNotNone(
+            User.do_reset(None, 'newpwd', 'newpwd'),
+            'Don\'t let them reset the password if reset_code is None'
+        )
+
+        user_qry = User.all().filter('email =', 'matt@gmail.com').get
+        self.assertIsNotNone(User.setup_reset(None))
+
+        self.assertIsNone(user_qry().reset_code)
+
+        self.assertIsNone(User.setup_reset('matt@gmail.com'))
+        self.assertIsNotNone(user_qry().reset_code)
+
+        self.assertIsNotNone(
+            User.do_reset('abc', 'newpwd', 'newpwd'),
+            'Invalid code'
+        )
+        self.assertIsNotNone(
+            User.do_reset(user_qry().reset_code, 'newpwd1', 'newpwd2'),
+            'Different passwords'
+        )
+        self.assertIsNone(
+            User.do_reset(user_qry().reset_code, 'newpwd', 'newpwd'),
+            'Reset the password'
+        )
+        self.assertIsNotNone(
+            User.do_reset(user_qry().reset_code, 'newpwd', 'newpwd'),
+            'Ensure you can\'t reset the password more than once with the same code'
+        )
+        self.assertIsNone(
+            User.authenticate(None, 'matt@gmail.com', 'newpwd'),
+            'Login with valid username and password'
         )
 
     def test_formatting(self):
@@ -100,4 +136,4 @@ class UserTest(TestCase):
             User.authenticate(None, 'pwd@gmail.com', 'newpwd'),
             'Password should have changed'
         )
-
+        self.assertIsNotNone(user.chgpwd(None, None, None))

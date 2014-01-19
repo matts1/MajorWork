@@ -14,6 +14,8 @@ LOGOUT_URL = '/logout'
 HOME_URL = '/home'
 PROFILE_URL = '/profile'
 SETTINGS_URL = '/settings'
+FORGOT_URL = '/forgot'
+RESET_PWD_URL = '/doreset'
 
 # put all our *_URL variables into the template
 for variable, content in locals().items():
@@ -21,3 +23,5 @@ for variable, content in locals().items():
         JINJA_ENVIRONMENT.globals[variable[:-4]] = content
 
 SESSION_NUM_DAYS = 7
+
+WEBSITE_URL = 'chsorganiser.appspot.com'

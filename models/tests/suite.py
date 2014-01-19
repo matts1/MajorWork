@@ -1,5 +1,6 @@
 import glob
 import unittest
+import sys
 
 test_file_strings = glob.glob('*.py')
 test_file_strings.remove('__init__.py')

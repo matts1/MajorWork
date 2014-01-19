@@ -23,9 +23,13 @@
             </button>
             <div class="collapse navbar-collapse navHeaderCollapse">
                 <ul class="nav navbar-nav navbar-right">
+                    {% if user != None %}
+                        <li><a href="">SEARCH HERE</a></li>
+                    {% endif %}
                     <li><a href="{{ HOME if user != None else INDEX }}">Home</a></li>
-                    <li><a href="mailto:mattstark75@gmail.com?Subject=Major%20Work" target="_top">Contact Us</a></li>
+                    <li><a href="mailto:mattstark75@gmail.com?Subject=Kno" target="_top">Contact Us</a></li>
                     {% if user == None %}
+                        <li><a href="#forgot" data-toggle="modal">Reset Password</a></li>
                         <li><a href="#login" data-toggle="modal">Login</a></li>
                         <li><a href="#register" data-toggle="modal">Sign Up</a></li>
                     {% else %}
@@ -65,18 +69,24 @@
     <script src="/js/page.js"></script>
 
     {% if user == None %}
-        {% call modal('login', 'Login', '/login', 'Login') %}
+        {% call modal('login', 'Login', LOGIN, 'Login') %}
             {{ input('email', 'Email', 'email', 'emailLogin', 'Enter Email') }}
             {{ input('password', 'Password', 'pwd', 'pwdLogin', 'Enter Password') }}
+            <p class="help-block"><a href="{{ FORGOT }}">Forgotten your password?</a></p>
         {% endcall %}
 
-        {% call modal('register', 'Sign Up', '/register', 'Register') %}
+        {% call modal('register', 'Sign Up', REGISTER, 'Register') %}
             {{ input('email', 'Email', 'email', 'emailRegister', 'Enter Email') }}
             {{ input('password', 'Password', 'pwd', 'pwdRegister', 'Enter Password') }}
             {{ input('password', 'Confirm Password', 'confpwd', 'confpwdRegister', 'Enter Password') }}
             {{ input('text', 'First Name', 'fname', 'fnameRegister', 'Enter First Name') }}
             {{ input('text', 'Surname', 'lname', 'lnameRegister', 'Enter Surname') }}
         {% endcall %}
+
+        {% call modal('forgot', 'Reset Password', FORGOT, 'Send Reset Code') %}
+            {{ input('email', 'Email', 'email', 'emailLogin', 'Enter Email') }}
+        {% endcall %}
+
     {% endif %}
 
     {% if err is defined %}
@@ -91,9 +101,8 @@
             <div><dt>{{ key }}</dt><dd>{{ val }}</dd></div>
         {% endfor %}
     </dl>
-    {% endif %}
-
-    {% if success is defined %}
+    {% elif success is defined %}
+        <div class="openmodal hidden" id="{{ outerid }}"></div>
         <div class="hidden successmsg" for="{{ outerid }}">{{ success }}</div>
     {% endif %}
 </body>

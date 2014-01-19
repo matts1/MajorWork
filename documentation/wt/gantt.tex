@@ -1,1 +1,22 @@
 \subsection{Gantt Chart}
+
+\newgantttimeslotformat{stardate}{%
+  \def\decomposestardate##1.##2\relax{%
+    \def\stardateyear{##1}\def\stardateday{##2}%
+  }%
+  \decomposestardate#1\relax%
+  \pgfcalendardatetojulian{\stardateyear-01-01}{#2}%
+  \advance#2 by-1\relax%
+  \advance#2 by\stardateday\relax%
+}
+
+
+% CHANGE VGRID SO THAT YOU DON'T SEE EVERY LINE
+\begin{ganttchart}[
+  hgrid,
+  vgrid,
+  x unit=0.07cm,
+  time slot format=stardate
+  ]{2014.1}{2014.212}
+  \gantttitlecalendar{month=name} \\
+\end{ganttchart}
