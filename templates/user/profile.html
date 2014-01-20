@@ -1,0 +1,16 @@
+{% set title='Profile' %}
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6">
+            {{ person.gravatar(150)|safe }}
+            Stats about person here (take layout from stackoverflow)
+        </div>
+        <div class="col-md-6">
+            {% if True %}
+                <input type="submit" value="Promote To Teacher">
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -17,6 +17,7 @@
 {% macro form(name, id=None, action=None) %}
     <form role="form" class="form-horizontal" method="post" class="text-center"
             {{ attr("id", id) }} {{ attr("action", action) }}>
+        <h3>{{ name }}</h3>
         {% if id != None %}
             <input type="hidden" name="whichform" value="{{ id }}">
         {% endif %}

@@ -4,7 +4,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>{{ title|default('ADD A TITLE') }}</title>
+        <title>Kno - {{ title|default('ADD A TITLE') }}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/css/bootstrap.min.css">
         <link rel="stylesheet" href="/css/style.css">
@@ -40,7 +40,7 @@
                                 Welcome, {{ user.fname }} <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="{{ PROFILE }}">Profile</a></li>
+                                <li><a href="{{ PROFILE }}/{{ user.key().id() }}">Profile</a></li>
                                 <li><a href="{{ SETTINGS }}">Settings</a></li>
                                 <li><a href="{{ LOGOUT }}">Logout</a></li>
                             </ul>

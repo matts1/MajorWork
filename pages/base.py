@@ -15,7 +15,7 @@ class BaseHandler(webapp2.RequestHandler):
     require_login = True
     success_msg = None
 
-    def do_request(self, fn):
+    def do_request(self, fn, *args, **kwargs):
         """
         called on any request, both GET and POST, with a function to execute.
         The function changes based on the method
@@ -25,7 +25,7 @@ class BaseHandler(webapp2.RequestHandler):
             self.to_write = True
             self.err = {}
             self.attrs = {}
-            res = fn()
+            res = fn(*args, **kwargs)
             if res is None:
                 res = {}
             if self.err.get(None, 1) is None:
@@ -33,13 +33,13 @@ class BaseHandler(webapp2.RequestHandler):
             res['formid'] = self.formid
             self.output(res)
 
-    def get(self):
+    def get(self, *args, **kwargs):
         self.using_post = False
-        self.do_request(self.myget)
+        self.do_request(self.myget, *args, **kwargs)
 
-    def post(self):
+    def post(self, *args, **kwargs):
         self.using_post = True
-        self.do_request(self.mypost)
+        self.do_request(self.mypost, *args, **kwargs)
 
     def myget(self):
         pass
@@ -76,6 +76,12 @@ class BaseHandler(webapp2.RequestHandler):
         if session_id is not None:
             return User.all().filter('session =', session_id) \
                 .filter('session_expiry >', datetime.datetime.now()).get()
+
+    def error(self, code):
+        if code == 404:
+            self.redirect('/404?page=' + self.request.url)
+        else:
+            raise NotImplementedError
 
     def allowed(self):
         """
@@ -116,8 +122,8 @@ class BaseHandler(webapp2.RequestHandler):
         """
         if self.to_write:
             if self.using_post:
+                self.response.write('FORMDATA:')
                 if self.err:
-                    self.response.write('FORMDATA:')
                     for key, val in self.err.items():
                         self.response.write('<div class="alert alert-danger" data-for="%s">%s</div>' %
                                             ('' if key is None else key, val))
