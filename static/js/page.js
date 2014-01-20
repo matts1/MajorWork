@@ -46,6 +46,10 @@ $(document).ready(function () {
             } else {
                 alert('INVALID RESPONSE:' + responseType)
             }
+
+            if (form.attr('data-refresh') == 'true') {
+                window.location.reload(true);
+            }
         }
     });
 

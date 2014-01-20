@@ -29,6 +29,8 @@ class User(db.Model):
 
     reset_code = db.StringProperty(required=False, default=None)
 
+    teacher = db.BooleanProperty(required=True, default=False)
+
     @classmethod
     def authenticate(cls, handler, email, pwd):
         user = cls.all().filter('email =', email).get()
@@ -118,6 +120,10 @@ class User(db.Model):
         if not newpwd:
             return ''  # client side validation
         self.pwd, self.salt = encrypt(newpwd)
+        self.put()
+
+    def maketeacher(self):
+        self.teacher = True
         self.put()
 
     def gravatar(self, size):

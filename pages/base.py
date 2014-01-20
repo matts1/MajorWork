@@ -41,10 +41,10 @@ class BaseHandler(webapp2.RequestHandler):
         self.using_post = True
         self.do_request(self.mypost, *args, **kwargs)
 
-    def myget(self):
+    def myget(self, *args, **kwargs):
         pass
 
-    def mypost(self):
+    def mypost(self, *args, **kwargs):
         pass
 
     def redirect(self, url, *args, **kwargs):
