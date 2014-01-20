@@ -117,6 +117,7 @@ class BaseHandler(webapp2.RequestHandler):
         if self.to_write:
             if self.using_post:
                 if self.err:
+                    self.response.write('FORMDATA:')
                     for key, val in self.err.items():
                         self.response.write('<div class="alert alert-danger" data-for="%s">%s</div>' %
                                             ('' if key is None else key, val))

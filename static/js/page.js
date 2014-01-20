@@ -21,26 +21,31 @@ $(document).ready(function () {
             insertAfterLastInput('<img src="/images/loading.gif" alt="loading">', form);
         },
         success: function (responseText, statusText, xhr, form) {
-            if (responseText.length > 9 && responseText.substring(0,9) == 'REDIRECT:') {
-                window.location = window.location.origin + responseText.substring(9);
+            var responseType = responseText.substring(0, 9);
+            responseText = responseText.substring(9);
+            if (responseType == 'REDIRECT:') {
+                window.location = window.location.origin + responseText;
+            } else if (responseType == 'FORMDATA:') {
+                // remove the loading icon if it exists
+                insertAfterLastInput('', form);
+
+                // this line fixes a bug where you can't search for the outermost tag, so we wrap it
+                responseText = '<nav>' + responseText + '</nav>';
+
+                // Fill in the error messages with the response from the server
+                $('div', $(responseText)).each(function () {
+                    var name = $(this).attr('data-for');
+                    var msg = $(this.outerHTML);
+                    msg.attr('data-submitted', 'true');
+                    if (name == '') {
+                        insertAfterLastInput(msg[0].outerHTML, form);
+                    } else {
+                        $('input[name=' + name + ']', form).parent().parent().after(msg);
+                    }
+                });
+            } else {
+                alert('INVALID RESPONSE:' + responseType)
             }
-            // remove the loading icon if it exists
-            insertAfterLastInput('', form);
-
-            // this line fixes a bug where you can't search for the outermost tag, so we wrap it
-            responseText = '<nav>' + responseText + '</nav>';
-
-            // Fill in the error messages with the response from the server
-            $('div', $(responseText)).each(function () {
-                var name = $(this).attr('data-for');
-                var msg = $(this.outerHTML);
-                msg.attr('data-submitted', 'true');
-                if (name == '') {
-                    insertAfterLastInput(msg[0].outerHTML, form);
-                } else {
-                    $('input[name=' + name + ']', form).parent().parent().after(msg);
-                }
-            });
         }
     });
 
