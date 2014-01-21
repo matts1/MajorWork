@@ -5,8 +5,9 @@ import time
 
 
 class LoginHandler(BaseHandler):
-    template = 'index.html'
+    template = 'other/index.html'
     require_login = False
+    formid = 'login'
 
     def mypost(self):
         self.err[None] = User.authenticate(

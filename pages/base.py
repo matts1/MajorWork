@@ -24,7 +24,8 @@ class BaseHandler(webapp2.RequestHandler):
             self.to_write = True
             self.err = {}
             self.attrs = {}
-            self.formid = self.request.get('whichform')
+            if self.formid is None:
+                self.formid = self.request.get('whichform')
             res = fn(*args, **kwargs)
             if res is None:
                 res = {}
@@ -42,10 +43,7 @@ class BaseHandler(webapp2.RequestHandler):
         self.do_request(self.mypost, *args, **kwargs)
 
     def myget(self, *args, **kwargs):
-        # if they don't have a myget method, then it will bring up the form if its a post page,
-        # or does nothing if its a get page
-        # chuck an invisible error on the form - should bring up the form
-        self.err[None] = ''
+        pass
 
     def mypost(self, *args, **kwargs):
         pass

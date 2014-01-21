@@ -12,7 +12,7 @@ $(document).ready(function () {
         }
     });
 
-    $('form').ajaxForm({
+    $('form[method=post]').ajaxForm({
         beforeSubmit: function (arr, form, options) {
             // delete the old error messages from the screen
             $('[data-submitted=true]', form).remove();

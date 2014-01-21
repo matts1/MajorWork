@@ -1,11 +1,12 @@
-from globals import HOME_URL
+from globals import VIEW_COURSES_URL
 from models import User
 from pages import BaseHandler
 
 
 class RegisterHandler(BaseHandler):
     require_login = False
-    template = 'index.html'
+    template = 'other/index.html'
+    formid = 'register'
 
     def mypost(self):
         if not self.adderr(User.register(
@@ -17,4 +18,4 @@ class RegisterHandler(BaseHandler):
                 self.request.get('lname')
         )):
             # all good, try and login for them
-            self.redirect(HOME_URL)
+            self.redirect(VIEW_COURSES_URL)

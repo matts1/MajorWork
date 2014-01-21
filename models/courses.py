@@ -1,6 +1,8 @@
 import os
 from google.appengine.ext import db
+from globals import COURSE_TABLE
 from models import User
+from models.search import Search
 from models.validators import is_title, make_title
 
 
@@ -24,9 +26,13 @@ class Course(db.Model):
             code = None
         course = cls(name=name, teacher=user, code=code)
         course.put()
+        Search.add_words(course.name, course.key().id(), COURSE_TABLE)
 
     def students(self):
         return [uc.user for uc in UserCourse.all().filter('course =', self)]
+
+    def __repr__(self):
+        return '%s (taught by %s)' % (self.name, self.teacher)
 
 class UserCourse(db.Model):
     user = db.ReferenceProperty(User, required=True)

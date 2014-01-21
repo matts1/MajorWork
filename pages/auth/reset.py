@@ -5,8 +5,9 @@ from pages import BaseHandler
 
 class ForgotPwdHandler(BaseHandler):
     require_login = False
-    template = 'index.html'
+    template = 'other/index.html'
     success_msg = 'An email has been sent containing a link to reset your account'
+    formid = 'forgot'
 
     def mypost(self):
         self.get_data('email')
@@ -17,6 +18,7 @@ class ResetPwdHandler(BaseHandler):
     success_msg = 'Your password has been reset. You can <a href="%s">login</a> now' % LOGIN_URL
     template = 'index.html'
     require_login = None
+    formid = 'doreset'
 
     def myget(self):
         # chuck an invisible error on the form - should bring up the form

@@ -3,7 +3,7 @@ from pages import BaseHandler
 
 class FourOhFourHandler(BaseHandler):
     require_login = None
-    template = '404.html'
+    template = 'other/404.html'
 
     def myget(self):
         return {'page': self.request.get('page')}

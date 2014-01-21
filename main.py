@@ -1,18 +1,12 @@
 from google.appengine.ext import db
 import webapp2
 from globals import *
-from models import User, Course
+from models import User, Course, Search
 
-from pages.auth import LoginHandler
-from pages.auth import LogoutHandler
-from pages.auth import ProfileHandler
-from pages.auth import RegisterHandler
+from pages.auth import LoginHandler, LogoutHandler, ProfileHandler, RegisterHandler, SettingsHandler
 from pages.auth import ResetPwdHandler, ForgotPwdHandler
-from pages.auth import SettingsHandler
-from pages.courses import ViewCourseHandler
-from pages.courses import CreateCourseHandler
-from pages import FourOhFourHandler, FourOhFourRedirecter
-from pages import IndexHandler
+from pages.courses import ViewCourseHandler, CreateCourseHandler
+from pages.other import FourOhFourHandler, FourOhFourRedirecter, IndexHandler, SearchHandler
 
 handlers = [
     (INDEX_URL, IndexHandler),
@@ -26,6 +20,7 @@ handlers = [
     (PROFILE_URL + r'/(\d+)', ProfileHandler),
     (VIEW_COURSES_URL, ViewCourseHandler),
     (CREATE_COURSE_URL, CreateCourseHandler),
+    (SEARCH_URL, SearchHandler),
     ('/404', FourOhFourHandler),
     ('/(.*)', FourOhFourRedirecter),
 ]
@@ -38,7 +33,8 @@ app = webapp2.WSGIApplication(
 
 # ADD INITIAL DATA - CLEAR DATABASE AFTER MAKING ANY CHANGES
 if User.all().get() is None:
-    db.delete(Course.all())  # chucks an error if this isn't the case
+    db.delete(Course.all())  # chucks an error if we don't delete all datastore stuff
+    db.delete(Search.all())
     assert User.register(None, 'mattstark75@gmail.com', 'a', 'a', 'matt', 'stark') is None
     me = User.all().filter('email =', 'mattstark75@gmail.com').get()
     assert me is not None and me.make_teacher() is None

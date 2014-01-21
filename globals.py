@@ -19,6 +19,7 @@ RESET_PWD_URL = '/doreset'
 CREATE_COURSE_URL = '/createcourse'
 VIEW_COURSES_URL = '/courses'
 OPEN_COURSE_URL = '/course/'
+SEARCH_URL = '/search/'
 
 TEACHER = 2
 
@@ -33,3 +34,8 @@ SESSION_NUM_DAYS = 7
 
 WEBSITE_URL = 'chsorganiser.appspot.com'
 WEBSITE_EMAIL = 'chsorganiser.appspotmail.com'
+
+# table names for searching
+COURSE_TABLE = 0
+TASKS_TABLE = 1
+# probably don't want to search for users based on the nature of the site

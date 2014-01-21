@@ -5,7 +5,8 @@ from pages import BaseHandler
 
 class CreateCourseHandler(BaseHandler):
     require_login = TEACHER
-    template = 'index.html'
+    template = 'other/index.html'
+    formid = 'createcourse'
 
     def mypost(self):
         self.adderr(Course.create(

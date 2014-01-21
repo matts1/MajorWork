@@ -1,4 +1,3 @@
-from models import Course
 from pages import BaseHandler
 
 

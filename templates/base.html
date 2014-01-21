@@ -23,9 +23,6 @@
             </button>
             <div class="collapse navbar-collapse navHeaderCollapse">
                 <ul class="nav navbar-nav navbar-right">
-                    {% if user != None %}
-                        <li><a href="/">SEARCH HERE</a></li>
-                    {% endif %}
                     <li><a href="mailto:mattstark75@gmail.com?Subject=Kno" target="_top">
                         Contact Us
                     </a></li>
@@ -72,11 +69,19 @@
             {% if user != None %}
             </div>
             <div class="col-lg-3">
+                <form class="form-search" action="{{ SEARCH }}" method="get">
+                    <input type="text" class="form-control" placeholder="Search" name="query">
+                        <button class="btn">
+                            Search
+                        </button>
+                </form>
                 <div class="list-group">
                 {% for i in range(5) %}
                     <a href="" class="list-group-item">
                         <div class="list-group-item-heading">Notification Heading</div>
-                        <div class="list-group-item-text">Notification Text</div>
+                        <div class="list-group-item-text">
+                            Notification Text
+                        </div>
                     </a>
                 {% endfor %}
                 </div>
