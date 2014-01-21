@@ -2,7 +2,7 @@ from models.tests.basetest import BaseTestCase
 from models import User
 
 
-class UserBaseTest(BaseTestCase):
+class UserTest(BaseTestCase):
     def test_bad_register(self):
         self.assertIsNotNone(
             User.register(None, 'matt@gmail.com', 'pwd', 'diffpwd', 'first', 'last'),

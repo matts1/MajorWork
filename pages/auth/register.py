@@ -4,13 +4,8 @@ from pages import BaseHandler
 
 
 class RegisterHandler(BaseHandler):
-    formid = 'register'
     require_login = False
     template = 'index.html'
-
-    def myget(self):
-        # chuck an invisible error on the form - should bring up the form
-        self.err[None] = ''
 
     def mypost(self):
         if not self.adderr(User.register(

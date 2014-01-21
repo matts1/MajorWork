@@ -126,6 +126,25 @@ class User(db.Model):
         self.teacher = True
         self.put()
 
+    def join_course(self, course_id, code=None):
+        from models import Course, UserCourse  # do this because users.py & courses.py import each other
+        course = Course.get_by_id(course_id)
+        if course is None or UserCourse.all().filter('user =', self).filter('course =', course).get():
+            return ''  # already in the course
+        if course.teacher.key().id() == self.key().id():
+            return ''  # you can't be a student in a course you teach
+        if course.code != code:
+            return 'Invalid code for ' + course.name
+        UserCourse(user=self, course=course).put()
+
+    def courses(self):
+        from models import UserCourse  # do this because users.py & courses.py import each other
+        return [uc.course for uc in UserCourse.all().filter('user =', self)]
+
+    def courses_taught(self):
+        from models import Course  # do this because users.py & courses.py import each other
+        return Course.all().filter('teacher =', self)
+
     def gravatar(self, size):
         # http://en.gravatar.com/site/implement/images/python/
         return '<img src="http://www.gravatar.com/avatar/%s?d=identicon&s=%d" alt="gravatar">' % \

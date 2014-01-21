@@ -17,6 +17,8 @@ SETTINGS_URL = '/settings'
 FORGOT_URL = '/forgot'
 RESET_PWD_URL = '/doreset'
 CREATE_COURSE_URL = '/createcourse'
+VIEW_COURSES_URL = '/courses'
+OPEN_COURSE_URL = '/course/'
 
 TEACHER = 2
 
@@ -24,6 +26,8 @@ TEACHER = 2
 for variable, content in locals().items():
     if variable.endswith("_URL"):
         JINJA_ENVIRONMENT.globals[variable[:-4]] = content
+
+JINJA_ENVIRONMENT.globals['COURSE_TBL_WIDTH'] = (4, 2, 3)
 
 SESSION_NUM_DAYS = 7
 

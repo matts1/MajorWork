@@ -1,11 +1,10 @@
 import calendar
 import email
 import webapp2
-import globals
 import datetime
 import Cookie
 
-from globals import LOGIN_URL, HOME_URL
+from globals import LOGIN_URL, VIEW_COURSES_URL, JINJA_ENVIRONMENT
 from models.users import User
 
 
@@ -25,6 +24,7 @@ class BaseHandler(webapp2.RequestHandler):
             self.to_write = True
             self.err = {}
             self.attrs = {}
+            self.formid = self.request.get('whichform')
             res = fn(*args, **kwargs)
             if res is None:
                 res = {}
@@ -42,7 +42,10 @@ class BaseHandler(webapp2.RequestHandler):
         self.do_request(self.mypost, *args, **kwargs)
 
     def myget(self, *args, **kwargs):
-        pass
+        # if they don't have a myget method, then it will bring up the form if its a post page,
+        # or does nothing if its a get page
+        # chuck an invisible error on the form - should bring up the form
+        self.err[None] = ''
 
     def mypost(self, *args, **kwargs):
         pass
@@ -98,7 +101,7 @@ class BaseHandler(webapp2.RequestHandler):
                 return False
         elif not self.require_login:
             if self.user:
-                self.redirect(HOME_URL)
+                self.redirect(VIEW_COURSES_URL)
                 return False
             else:
                 return True
@@ -133,7 +136,7 @@ class BaseHandler(webapp2.RequestHandler):
             else:
                 data['user'] = self.user
                 template = self.template if template is None else template
-                self.response.write(globals.JINJA_ENVIRONMENT.get_template(template).render(**data))
+                self.response.write(JINJA_ENVIRONMENT.get_template(template).render(**data))
 
     def clear_cookie(self, name, path='/', domain=None):
         expires = datetime.datetime.utcnow() - datetime.timedelta(days=365)

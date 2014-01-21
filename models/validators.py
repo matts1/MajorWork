@@ -10,8 +10,8 @@ def is_alphabetic(x, allowed=""):
 def is_email(word):
     if word is None or word.count("@") != 1:
         return False
-    user, domain = word.split("@")
-    return is_alphabetic(user, "1234567890.!#$%&'*+-/=?^_`{|}~") and is_alphabetic(domain, "1234567890-.")
+    user, dom = word.split("@")
+    return is_alphabetic(user, "1234567890.!#$%&'*+-/=?^_`{|}~") and is_alphabetic(dom, "1234567890-.")
 
 
 def matches_regex(word, exp):
@@ -20,3 +20,9 @@ def matches_regex(word, exp):
 
 def is_name(word):
     return matches_regex(word, '[a-z]|([a-z]+[a-z-]*[a-z]+)')
+
+def is_title(word):
+    return word is not None and word.strip()
+
+def make_title(word):
+    return re.sub(r'\s+', ' ', word.strip()).title()

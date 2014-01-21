@@ -1,5 +1,5 @@
 from models.tests import BaseTestCase
-from models.validators import is_email, is_alphabetic, is_name
+from models.validators import is_email, is_alphabetic, is_name, is_title, make_title
 
 
 class BaseTestValidators(BaseTestCase):
@@ -30,3 +30,15 @@ class BaseTestValidators(BaseTestCase):
         self.assertFalse(is_name("a bc"))
         self.assertFalse(is_name(""))
         self.assertFalse(is_name(None))
+
+    def test_title(self):
+        self.assertFalse(is_title(''))
+        self.assertFalse(is_title(' '))
+        self.assertTrue(is_title('blah'))
+        self.assertTrue(is_title(' \n\t\r\v\fblah\n\t\v\r\f'))
+        self.assertTrue(is_title(' public course \n'))
+
+    def test_make_title(self):
+        self.assertEqual(make_title(' \n\t\r\v\fblah\n\t\v\r\f'), 'Blah')
+        self.assertEqual(make_title('course'), 'Course')
+        self.assertEqual(make_title('course blah'), 'Course Blah')

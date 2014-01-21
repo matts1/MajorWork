@@ -5,12 +5,7 @@ from pages import BaseHandler
 
 class CreateCourseHandler(BaseHandler):
     require_login = TEACHER
-    formid = 'createcourse'
     template = 'index.html'
-
-    def myget(self):
-        # chuck an invisible error on the form - should bring up the form
-        self.err[None] = ''
 
     def mypost(self):
         self.adderr(Course.create(

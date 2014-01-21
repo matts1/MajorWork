@@ -7,7 +7,6 @@ class SettingsHandler(BaseHandler):
 
     def mypost(self):
         # find out which form they filled in
-        self.formid = self.request.get('whichform')
         if self.formid == 'chgpwd':
             self.success_msg = 'Your password has been changed'
             self.adderr(self.user.chgpwd(

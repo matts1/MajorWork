@@ -1,17 +1,12 @@
 from models import User
 from pages import BaseHandler
-from globals import HOME_URL
+from globals import VIEW_COURSES_URL
 import time
 
 
 class LoginHandler(BaseHandler):
-    formid = 'login'
     template = 'index.html'
     require_login = False
-
-    def myget(self):
-        # chuck an invisible error on the form - should bring up the form
-        self.err[None] = ''
 
     def mypost(self):
         self.err[None] = User.authenticate(
@@ -23,4 +18,4 @@ class LoginHandler(BaseHandler):
             # The time.sleep is necessary because otherwise the database
             # hasn't updated so there is no-one to log in as
             time.sleep(0.1)
-            self.redirect(HOME_URL)
+            self.redirect(VIEW_COURSES_URL)

@@ -25,3 +25,18 @@
 .navbar-center li {
     margin: 0 auto;
 }
+
+.table-row {
+    padding: 5px;
+    border-bottom: 1px solid lightgrey;
+}
+
+/* pull the page header further to the top */
+.page-header {
+    margin-top: 5px;
+}
+
+/* pull panel body further up too */
+.panel-body {
+    padding-top: 0;
+}
