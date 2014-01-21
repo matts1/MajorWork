@@ -16,6 +16,9 @@ PROFILE_URL = '/profile'
 SETTINGS_URL = '/settings'
 FORGOT_URL = '/forgot'
 RESET_PWD_URL = '/doreset'
+CREATE_COURSE_URL = '/createcourse'
+
+TEACHER = 2
 
 # put all our *_URL variables into the template
 for variable, content in locals().items():

@@ -16,12 +16,11 @@
                 {% endif %}
             </div>
             <div class="modal-footer">
-                <a class="btn btn-{{ 'primary' if btn == None else 'default'}}" data-dismiss="modal">
+                <a class="btn btn-default" data-dismiss="modal">
                     {{ 'Close' if action == None else 'Cancel' }}
                 </a>
-                {% if btn != None %}
-                    <input type="submit" class="btn btn-primary" value="{{ btn }}">
-                {% endif %}
+                <input type="submit" class="btn btn-primary"
+                    value="{{ title if btn == None else btn }}">
             </div>
             {% if action != None %}
                 </form>

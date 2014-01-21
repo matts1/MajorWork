@@ -1,9 +1,8 @@
-from models.users import User
-from pages.base import BaseHandler
+from models import User
+from pages import BaseHandler
 
 
 class ProfileHandler(BaseHandler):
-    require_login = True
     template = 'user/profile.html'
 
     def myget(self, person_id):
@@ -15,5 +14,5 @@ class ProfileHandler(BaseHandler):
     def mypost(self, person_id):
         person = User.get_by_id(int(person_id))
         if self.user.teacher and person is not None:
-            person.maketeacher()
+            person.make_teacher()
 

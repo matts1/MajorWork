@@ -1,26 +1,28 @@
 import webapp2
 from globals import *
 
-from pages.auth.login import LoginHandler
-from pages.auth.logout import LogoutHandler
-from pages.auth.profile import ProfileHandler
-from pages.auth.register import RegisterHandler
-from pages.auth.reset import ResetPwdHandler, ForgotPwdHandler
-from pages.auth.settings import SettingsHandler
-from pages.courses.viewcourses import CourseHandler
-from pages.fourohfour import FourOhFourHandler, FourOhFourRedirecter
-from pages.index import IndexHandler
+from pages.auth import LoginHandler
+from pages.auth import LogoutHandler
+from pages.auth import ProfileHandler
+from pages.auth import RegisterHandler
+from pages.auth import ResetPwdHandler, ForgotPwdHandler
+from pages.auth import SettingsHandler
+from pages.courses import ViewCourseHandler
+from pages.courses import CreateCourseHandler
+from pages import FourOhFourHandler, FourOhFourRedirecter
+from pages import IndexHandler
 
 handlers = [
     (INDEX_URL, IndexHandler),
     (LOGIN_URL, LoginHandler),
     (REGISTER_URL, RegisterHandler),
     (LOGOUT_URL, LogoutHandler),
-    (HOME_URL, CourseHandler),
+    (HOME_URL, ViewCourseHandler),
     (SETTINGS_URL, SettingsHandler),
     (FORGOT_URL, ForgotPwdHandler),
     (RESET_PWD_URL, ResetPwdHandler),
     (PROFILE_URL + r'/(\d+)', ProfileHandler),
+    (CREATE_COURSE_URL, CreateCourseHandler),
     ('/404', FourOhFourHandler),
     ('/(.*)', FourOhFourRedirecter),
 ]

@@ -1,4 +1,4 @@
-from pages.base import BaseHandler
+from pages import BaseHandler
 
 
 class IndexHandler(BaseHandler):

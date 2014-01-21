@@ -91,7 +91,7 @@ class BaseHandler(webapp2.RequestHandler):
         if self.require_login is None:
             return True
         elif self.require_login:
-            if self.user:
+            if self.user and (self.require_login == True or self.user.teacher):
                 return True
             else:
                 self.redirect(LOGIN_URL)

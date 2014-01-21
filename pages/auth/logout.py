@@ -1,10 +1,8 @@
 from globals import LOGOUT_URL
-from pages.base import BaseHandler
+from pages import BaseHandler
 
 
 class LogoutHandler(BaseHandler):
-    require_login = True
-
     def myget(self):
         self.user.logout()
 

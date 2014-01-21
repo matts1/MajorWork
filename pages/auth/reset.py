@@ -1,6 +1,6 @@
 from globals import FORGOT_URL, LOGIN_URL
-from models.users import User
-from pages.base import BaseHandler
+from models import User
+from pages import BaseHandler
 
 
 class ForgotPwdHandler(BaseHandler):

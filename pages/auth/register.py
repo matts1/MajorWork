@@ -1,6 +1,6 @@
 from globals import HOME_URL
-from models.users import User
-from pages.base import BaseHandler
+from models import User
+from pages import BaseHandler
 
 
 class RegisterHandler(BaseHandler):
@@ -10,19 +10,16 @@ class RegisterHandler(BaseHandler):
 
     def myget(self):
         # chuck an invisible error on the form - should bring up the form
-        self.get_data()
         self.err[None] = ''
 
     def mypost(self):
-        self.get_data('email', 'fname', 'lname')
-
         if not self.adderr(User.register(
                 self,
-                self.attrs['email'],
+                self.request.get('email'),
                 self.request.get('pwd'),
                 self.request.get('confpwd'),
-                self.attrs['fname'],
-                self.attrs['lname']
+                self.request.get('fname'),
+                self.request.get('lname')
         )):
             # all good, try and login for them
             self.redirect(HOME_URL)

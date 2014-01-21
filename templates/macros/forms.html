@@ -2,8 +2,9 @@
     <div class="form-group">
         <label for="{{ id }}" class="col-lg-4 control-label">{{ label }}</label>
         <div class="col-lg-7">
-            <input type="{{ type }}" class="form-control" id="{{ id }}"
-               placeholder="{{ placeholder.title() }}" name="{{ name }}" required="{{ required }}">
+            <input type="{{ type }}" {% if type != 'checkbox' %}class="form-control"{% endif %}
+                id="{{ id }}" placeholder="{{ placeholder.title() }}" name="{{ name }}"
+                {% if required %}required{% endif %} maxlength="500">
         </div>
     </div>
 {% endmacro %}

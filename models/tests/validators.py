@@ -1,4 +1,4 @@
-from models.tests.basetest import BaseTestCase
+from models.tests import BaseTestCase
 from models.validators import is_email, is_alphabetic, is_name
 
 

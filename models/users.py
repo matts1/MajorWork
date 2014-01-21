@@ -122,7 +122,7 @@ class User(db.Model):
         self.pwd, self.salt = encrypt(newpwd)
         self.put()
 
-    def maketeacher(self):
+    def make_teacher(self):
         self.teacher = True
         self.put()
 

@@ -20,5 +20,8 @@ libraries:
 - name: jinja2
   version: latest
 
+- name: markupsafe
+  version: latest
+
 - name: webapp2
   version: "2.5.2"

@@ -1,5 +1,5 @@
 from models.tests.basetest import BaseTestCase
-from models.users import User
+from models import User
 
 
 class UserBaseTest(BaseTestCase):
