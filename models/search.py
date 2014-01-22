@@ -41,5 +41,9 @@ class Search(db.Model):
     @classmethod
     def rename_words(cls, line, key, table):
         # for each record, there's only going to be one 'line' indexed
-        db.delete(cls.all().filter('tblkey =', key).filter('table =', table))
+        cls.delete_words(key, table)
         cls.add_words(line, key, table)
+
+    @classmethod
+    def delete_words(cls, key, table):
+        db.delete(cls.all().filter('tblkey =', key).filter('table =', table))

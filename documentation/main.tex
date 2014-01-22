@@ -1,15 +1,16 @@
 \documentclass[notitlepage]{report}
+\usepackage{pgfgantt}
 \usepackage[utf8]{inputenc}
 \usepackage{todonotes}
 \usepackage{wrapfig}
 \usepackage{titling}
-\usepackage{mathtools}
 \usepackage{amssymb}
 \usepackage{minted}
-\usepackage{pgfgantt}
 \usepackage{hyperref}
 \usepackage{xparse}
 \usepackage{xstring}
+\usepackage{lscape}
+\usepackage[nomessages]{fp}
 
 \usepackage{algorithm}% http://ctan.org/pkg/algorithm
 \usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
@@ -99,7 +100,7 @@
 \newcommand{\KwIn}[1]{\textbf{Input: }#1\\}
 \newcommand{\KwOut}[1]{\textbf{Output: }#1\\}
  
-\algnewcommand\Set[2]{\LState\textbf{set} #1 \textbf{to} #2}
+\algnewcommand\Set[2]{\LState\textbf{set} \underline{#1} \textbf{to} #2}
 \algnewcommand\Yield{\LState\textbf{yield}\space}
 
 \algrenewcommand\algorithmicrequire{\textbf{Precondition:}}
@@ -122,10 +123,10 @@ Where do I put improvements (in every section in the marking criteria)
 \newpage
 
 \section{Walkthrough}
-\input{wt/gantt}
 \input{wt/probstatement}
-\input{wt/ideas}
 \input{wt/approach}
+\input{wt/ideas}
+\input{wt/gantt}
 \input{wt/lang}
 \input{wt/resources}
 \newpage
