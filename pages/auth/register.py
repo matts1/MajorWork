@@ -1,4 +1,4 @@
-from globals import VIEW_COURSES_URL
+from globals import LIST_COURSES_URL
 from models import User
 from pages import BaseHandler
 
@@ -18,4 +18,4 @@ class RegisterHandler(BaseHandler):
                 self.request.get('lname')
         )):
             # all good, try and login for them
-            self.redirect(VIEW_COURSES_URL)
+            self.redirect(LIST_COURSES_URL)

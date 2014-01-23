@@ -145,6 +145,15 @@ class User(db.Model):
         from models import Course  # do this because users.py & courses.py import each other
         return Course.all().filter('teacher =', self)
 
+    def has_permission(self, course):
+        from models import UserCourse  # cross referencing imports
+        inside = UserCourse.all().filter('user =', self).filter('course =', course).get() \
+                is not None or course.teacher.key().id() == self.key().id()
+        if course.code is None or inside:  # public or we're in it
+            course.inside = inside
+            return True
+        return False
+
     def gravatar(self, size):
         # http://en.gravatar.com/site/implement/images/python/
         return '<img src="http://www.gravatar.com/avatar/%s?d=identicon&s=%d" alt="gravatar">' % \

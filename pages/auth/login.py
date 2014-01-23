@@ -1,6 +1,6 @@
 from models import User
 from pages import BaseHandler
-from globals import VIEW_COURSES_URL
+from globals import LIST_COURSES_URL
 import time
 
 
@@ -19,4 +19,4 @@ class LoginHandler(BaseHandler):
             # The time.sleep is necessary because otherwise the database
             # hasn't updated so there is no-one to log in as
             time.sleep(0.1)
-            self.redirect(VIEW_COURSES_URL)
+            self.redirect(LIST_COURSES_URL)

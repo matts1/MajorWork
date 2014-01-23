@@ -6,7 +6,8 @@
             {% if in_course %}
                 <a href="{{ OPEN_COURSE }}{{ c.key().id() }}" class="btn btn-primary">Open Course</a>
             {% else %}
-                <form id="join{{ c.key().id() }}" method="post">
+                <form id="join{{ c.key().id() }}" method="post" action="{{ LIST_COURSES }}"
+                      data-custom="joinpublic" data-key="{{ c.key().id() }}">
                     <input type="hidden" name="whichform" value="join{{ c.key().id() }}">
                     <input type="submit" class="btn btn-primary" value="Join Course">
                 </form>

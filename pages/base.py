@@ -4,7 +4,7 @@ import webapp2
 import datetime
 import Cookie
 
-from globals import LOGIN_URL, VIEW_COURSES_URL, JINJA_ENVIRONMENT
+from globals import LOGIN_URL, LIST_COURSES_URL, JINJA_ENVIRONMENT
 from models.users import User
 
 
@@ -99,7 +99,7 @@ class BaseHandler(webapp2.RequestHandler):
                 return False
         elif not self.require_login:
             if self.user:
-                self.redirect(VIEW_COURSES_URL)
+                self.redirect(LIST_COURSES_URL)
                 return False
             else:
                 return True

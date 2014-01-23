@@ -5,7 +5,7 @@
 {% block content %}
 {% for table, res in results %}
     {% if table == 0 %}
-       {{ res.inside }} {{ displaycourse(res, res.inside) }}
+       {{ displaycourse(res, res.inside) }}
     {% endif %}
 {% else %}
 No results found. You might want to try a different search query.

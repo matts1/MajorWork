@@ -29,10 +29,7 @@ class Search(db.Model):
         for (table, key) in sorted(count, key=count.get, reverse=True):
             if table == COURSE_TABLE:
                 course = Course.get_by_id(key)
-                inside = UserCourse.all().filter('user =', user).filter('course =', course).get() \
-                        is not None or course.teacher.key().id() == user.key().id()
-                if course.code is None or inside:  # public or we're in it
-                    course.inside = inside
+                if user.has_permission(course):
                     values.append((table, course))
             else:
                 raise NotImplementedError

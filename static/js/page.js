@@ -21,34 +21,43 @@ $(document).ready(function () {
             insertAfterLastInput('<img src="/images/loading.gif" alt="loading">', form);
         },
         success: function (responseText, statusText, xhr, form) {
-            var responseType = responseText.substring(0, 9);
-            responseText = responseText.substring(9);
-            if (responseType == 'REDIRECT:') {
-                window.location = window.location.origin + responseText;
-            } else if (responseType == 'FORMDATA:') {
-                // remove the loading icon if it exists
-                insertAfterLastInput('', form);
+            var custom = form.attr('data-custom');
 
-                // this line fixes a bug where you can't search for the outermost tag, so we wrap it
-                responseText = '<nav>' + responseText + '</nav>';
+            if (typeof custom === 'undefined') {
+                var responseType = responseText.substring(0, 9);
+                responseText = responseText.substring(9);
+                if (responseType == 'REDIRECT:') {
+                    window.location = window.location.origin + responseText;
+                } else if (responseType == 'FORMDATA:') {
+                    // remove the loading icon if it exists
+                    insertAfterLastInput('', form);
 
-                // Fill in the error messages with the response from the server
-                $('div', $(responseText)).each(function () {
-                    var name = $(this).attr('data-for');
-                    var msg = $(this.outerHTML);
-                    msg.attr('data-submitted', 'true');
-                    if (name == '') {
-                        insertAfterLastInput(msg[0].outerHTML, form);
-                    } else {
-                        $('input[name=' + name + ']', form).parent().parent().after(msg);
-                    }
-                });
-            } else {
-                alert('INVALID RESPONSE:' + responseType)
-            }
+                    // this line fixes a bug where you can't search for the outermost tag, so we wrap it
+                    responseText = '<nav>' + responseText + '</nav>';
 
-            if (form.attr('data-refresh') == 'true') {
-                window.location.reload(true);
+                    // Fill in the error messages with the response from the server
+                    $('div', $(responseText)).each(function () {
+                        var name = $(this).attr('data-for');
+                        var msg = $(this.outerHTML);
+                        msg.attr('data-submitted', 'true');
+                        if (name == '') {
+                            insertAfterLastInput(msg[0].outerHTML, form);
+                        } else {
+                            $('input[name=' + name + ']', form).parent().parent().after(msg);
+                        }
+                    });
+                } else {
+                    alert('INVALID RESPONSE:' + responseType)
+                }
+
+                if (form.attr('data-refresh') == 'true') {
+                    window.location.reload(true);
+                }
+
+            } else if (custom == 'joinpublic') {
+                var inp = $('input[type=submit]', form);
+                inp.replaceWith('<a href="/course/' + form.attr('data-key') +
+                    '" class="btn btn-primary">Open Course</a>');
             }
         }
     });

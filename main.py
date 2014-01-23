@@ -5,8 +5,9 @@ from models import User, Course, Search
 
 from pages.auth import LoginHandler, LogoutHandler, ProfileHandler, RegisterHandler, SettingsHandler
 from pages.auth import ResetPwdHandler, ForgotPwdHandler
-from pages.courses import ViewCourseHandler, CreateCourseHandler
+from pages.courses import ListCoursesHandler, CreateCourseHandler, ViewCourseHandler
 from pages.other import FourOhFourHandler, FourOhFourRedirecter, IndexHandler, SearchHandler
+import time
 
 handlers = [
     (INDEX_URL, IndexHandler),
@@ -17,8 +18,9 @@ handlers = [
     (SETTINGS_URL, SettingsHandler),
     (FORGOT_URL, ForgotPwdHandler),
     (RESET_PWD_URL, ResetPwdHandler),
-    (PROFILE_URL + r'/(\d+)', ProfileHandler),
-    (VIEW_COURSES_URL, ViewCourseHandler),
+    (PROFILE_URL + r'(\d+)', ProfileHandler),
+    (LIST_COURSES_URL, ListCoursesHandler),
+    (OPEN_COURSE_URL + r'(\d+)', ViewCourseHandler),
     (CREATE_COURSE_URL, CreateCourseHandler),
     (SEARCH_URL, SearchHandler),
     ('/404', FourOhFourHandler),
@@ -35,6 +37,7 @@ app = webapp2.WSGIApplication(
 if User.all().get() is None:
     db.delete(Course.all())  # chucks an error if we don't delete all datastore stuff
     db.delete(Search.all())
+    time.sleep(0.1)
     assert User.register(None, 'mattstark75@gmail.com', 'a', 'a', 'matt', 'stark') is None
     me = User.all().filter('email =', 'mattstark75@gmail.com').get()
     assert me is not None and me.make_teacher() is None

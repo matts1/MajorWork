@@ -1,10 +1,6 @@
-{% from '/macros/course.html' import displaycourses %}
-{% set title = 'View Courses' %}
-{% extends '/base.html' %}
+{% set title=course.name %}
+{% extends 'base.html' %}
 
 {% block content %}
-    {% if user.teacher %}
-        {{ displaycourses(taught_courses, 'Courses You Teach', True) }}
-    {% endif %}
-    {{ displaycourses(my_courses, 'Courses You Are Enrolled In', True) }}
+Looking at {{ course.name }}
 {% endblock %}
