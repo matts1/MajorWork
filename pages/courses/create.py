@@ -1,4 +1,4 @@
-from globals import TEACHER
+from globals import TEACHER, OPEN_COURSE_URL
 from models import Course
 from pages import BaseHandler
 
@@ -9,10 +9,10 @@ class CreateCourseHandler(BaseHandler):
     formid = 'createcourse'
 
     def mypost(self):
-        self.adderr(Course.create(
+        course = self.adderr(Course.create(
             self.user,
             self.request.get('name'),
             self.request.get('mode'),
         ))
-        # if not self.err:
-            # self.redirect() REDIRECT TO THE COURSE PAGE
+        if not self.err:
+            self.redirect(OPEN_COURSE_URL + str(course.key().id()))

@@ -27,6 +27,7 @@ class Course(db.Model):
         course = cls(name=name, teacher=user, code=code)
         course.put()
         Search.add_words(course.name, course.key().id(), COURSE_TABLE)
+        return course
 
     def students(self):
         return [uc.user for uc in UserCourse.all().filter('course =', self)]

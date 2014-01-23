@@ -31,6 +31,7 @@
                         <li><a href="#login" data-toggle="modal">Login</a></li>
                         <li><a href="#register" data-toggle="modal">Sign Up</a></li>
                     {% else %}
+                        <li><a href="#joincourse" data-toggle="modal">Join Course</a></li>
                         <li><a href="{{ LIST_COURSES }}">Courses</a></li>
                         {% if user.teacher %}
                             <li class="dropdown">
@@ -129,11 +130,16 @@
         {% call modal('forgot', 'Reset Password', FORGOT, 'Send Reset Code') %}
             {{ input('email', 'Email', 'email', 'emailLogin', 'Enter Email') }}
         {% endcall %}
-    {% elif user.teacher %}
-        {% call modal('createcourse', 'Create Course', CREATE_COURSE) %}
-            {{ input('text', 'Name', 'name', 'nameMakeCourse', 'Enter Course Name') }}
-            {{ input('checkbox', 'Private', 'mode', 'modeMakeCourse', required=False) }}
+    {% else %}
+        {% call modal('joincourse', 'Join Course', LIST_COURSES) %}
+            {{ input('text', 'Code', 'code', 'codeJoinCourse', 'Enter course code') }}
         {% endcall %}
+        {% if user.teacher %}
+            {% call modal('createcourse', 'Create Course', CREATE_COURSE) %}
+                {{ input('text', 'Name', 'name', 'nameMakeCourse', 'Enter Course Name') }}
+                {{ input('checkbox', 'Private', 'mode', 'modeMakeCourse', required=False) }}
+            {% endcall %}
+        {% endif %}
     {% endif %}
 
 

@@ -1,3 +1,5 @@
+import time
+from globals import OPEN_COURSE_URL
 from pages import BaseHandler
 
 
@@ -11,11 +13,21 @@ class ListCoursesHandler(BaseHandler):
         )
 
     def mypost(self):
-        if self.formid is not None and len(self.formid) > 4:
+        success = False
+        if self.formid == 'joincourse':
+            code = self.request.get('code')
+            if code:
+                success = True
+                course = self.adderr(self.user.join_course(None, code.lower()))
+                if not self.err:
+                    time.sleep(0.1)  # let it update
+                    self.redirect(OPEN_COURSE_URL + str(course.key().id()))
+
+        elif self.formid is not None and len(self.formid) > 4:
             course = self.formid[4:]
             if course.isdigit():
                 course = int(course)
                 success = True
                 self.adderr(self.user.join_course(course))
         if not success:
-            self.err[None] = ''
+            self.err[None] = 'Invalid code'

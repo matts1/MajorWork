@@ -128,14 +128,20 @@ class User(db.Model):
 
     def join_course(self, course_id, code=None):
         from models import Course, UserCourse  # do this because users.py & courses.py import each other
-        course = Course.get_by_id(course_id)
-        if course is None or UserCourse.all().filter('user =', self).filter('course =', course).get():
-            return ''  # already in the course
+        if code is not None:
+            course = Course.all().filter('code =', code).get()
+        elif course_id is not None:
+            course = Course.get_by_id(course_id)
+        else:
+            return ''
+        if course is None:
+            return 'Invalid code'
+        if UserCourse.all().filter('user =', self).filter('course =', course).get():
+            return 'You are already in the course'
         if course.teacher.key().id() == self.key().id():
-            return ''  # you can't be a student in a course you teach
-        if course.code != code:
-            return 'Invalid code for ' + course.name
+            return 'You teach that course'
         UserCourse(user=self, course=course).put()
+        return course
 
     def courses(self):
         from models import UserCourse  # do this because users.py & courses.py import each other
