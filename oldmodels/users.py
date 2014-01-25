@@ -1,12 +1,12 @@
-from django.db import models
-
 import datetime
+from google.appengine.api import mail
+from google.appengine.ext import db
 
 from os import urandom
 import hashlib
 
 from globals import *
-from models.validators import is_email, is_name
+from oldmodels.validators import is_email, is_name
 
 
 def encrypt(pwd, salt=None):
@@ -17,23 +17,23 @@ def encrypt(pwd, salt=None):
         return hashlib.sha512(salt + pwd).hexdigest().encode('hex')
 
 
-class User(models.Model):
-    email = models.TextField(required=True)
-    pwd = models.TextField(required=True)
-    fname = models.TextField(required=True)
-    lname = models.TextField(required=True)
-    salt = models.TextField(required=True)
+class User(db.Model):
+    email = db.StringProperty(required=True)
+    pwd = db.StringProperty(required=True)
+    fname = db.StringProperty(required=True)
+    lname = db.StringProperty(required=True)
+    salt = db.StringProperty(required=True)
 
-    session = models.TextField(required=False, default=None)
-    session_expiry = models.DateTimeField(required=False, default=None)
+    session = db.StringProperty(required=False, default=None)
+    session_expiry = db.DateTimeProperty(required=False, default=None)
 
-    reset_code = models.TextField(required=False, default=None)
+    reset_code = db.StringProperty(required=False, default=None)
 
-    teacher = models.BooleanField(required=True, default=False)
+    teacher = db.BooleanProperty(required=True, default=False)
 
     @classmethod
     def authenticate(cls, handler, email, pwd):
-        user = cls.objects.filter(email=email).first()
+        user = cls.all().filter('email =', email).get()
         if user is not None:
             hashed = encrypt(pwd, user.salt)
             if hashed != user.pwd:
@@ -58,20 +58,20 @@ class User(models.Model):
             errs[None] = ''  # client side validation
         if pwd != confpwd:
             errs[None] = 'Your passwords were different'
-        if cls.objects.filter(email=email).first():
+        if cls.all().filter('email =', email).get():
             errs['email'] = email + ' is already in our database'
         if errs:
             return errs
         pwd, salt = encrypt(pwd)
         user = cls(email=email, pwd=pwd, fname=fname.title(), lname=lname.title(), salt=salt)
         user.login(handler)
-        user.save()
+        user.put()
 
     @classmethod
     def setup_reset(cls, email, send_email=False):
         if email is None:
             return ''  # client side validation
-        user = cls.objects.filter(email=email).first()
+        user = cls.all().filter('email =', email).get()
         if user is None:
             return 'There is no user with the email ' + email
         user.reset_code = urandom(50).encode('hex')
@@ -90,7 +90,7 @@ class User(models.Model):
     def do_reset(cls, code, newpwd, confpwd):
         if not all((code, newpwd, confpwd)):
             return ''  # client side validation
-        user = cls.objects.filter(reset_code=code).first()
+        user = cls.all().filter('reset_code =', code).get()
         if user is None:
             return 'The code you provided was wrong. Please check that you copied the url correctly'
         if newpwd != confpwd:
@@ -102,13 +102,13 @@ class User(models.Model):
     def login(self, handler):
         self.session = urandom(100).encode('hex')
         self.session_expiry = datetime.datetime.now() + datetime.timedelta(days=SESSION_NUM_DAYS)
-        self.save()
+        self.put()
         if hasattr(handler, 'set_cookie'):  # so it doesn't fail in tests
             handler.set_cookie('session', self.session)
-
+    
     def logout(self):
         self.session = None
-        self.save()
+        self.put()
 
     def chgpwd(self, oldpwd, newpwd, newpwdconf):
         if not all((oldpwd, newpwd, newpwdconf)):
@@ -120,41 +120,41 @@ class User(models.Model):
         if not newpwd:
             return ''  # client side validation
         self.pwd, self.salt = encrypt(newpwd)
-        self.save()
+        self.put()
 
     def make_teacher(self):
         self.teacher = True
-        self.save()
+        self.put()
 
     def join_course(self, course_id, code=None):
-        from courses.models import Course, UserCourse  # do this because users.py & courses.py import each other
+        from models import Course, UserCourse  # do this because users.py & courses.py import each other
         if code is not None:
-            course = Course.objects.filter(code=code).first()
+            course = Course.all().filter('code =', code).get()
         elif course_id is not None:
-            course = Course.filter(pk=course_id).first()
+            course = Course.get_by_id(course_id)
         else:
             return ''
         if course is None:
             return 'Invalid code'
-        if UserCourse.objects.filter(user=self, course=course).first():
+        if UserCourse.all().filter('user =', self).filter('course =', course).get():
             return 'You are already in the course'
-        if course.teacher.pk == self.pk:
+        if course.teacher.key().id() == self.key().id():
             return 'You teach that course'
-        UserCourse(user=self, course=course).save()
+        UserCourse(user=self, course=course).put()
         return course
 
     def courses(self):
-        from courses.models import UserCourse  # do this because users.py & courses.py import each other
-        return [uc.course for uc in UserCourse.objects.filter(user=self)]
+        from models import UserCourse  # do this because users.py & courses.py import each other
+        return [uc.course for uc in UserCourse.all().filter('user =', self)]
 
     def courses_taught(self):
-        from courses.models import Course  # do this because users.py & courses.py import each other
-        return Course.objects.filter(teacher=self)
+        from models import Course  # do this because users.py & courses.py import each other
+        return Course.all().filter('teacher =', self)
 
     def has_permission(self, course):
-        from courses.models import UserCourse  # cross referencing imports
-        inside = UserCourse.objects.filter(user=self, course=course).first() \
-                is not None or course.teacher.pk == self.pk
+        from models import UserCourse  # cross referencing imports
+        inside = UserCourse.all().filter('user =', self).filter('course =', course).get() \
+                is not None or course.teacher.key().id() == self.key().id()
         if course.code is None or inside:  # public or we're in it
             course.inside = inside
             return True
@@ -169,7 +169,6 @@ class User(models.Model):
         return '%s %s' % (self.fname, self.lname)
 
     def send_mail(self, subject, body):
-        # TODO: get mail working
         mail.send_mail(
             sender='Kno Support <support@%s>' % WEBSITE_EMAIL,
             to='%s %s <%s>' % (self.fname, self.lname, self.email),

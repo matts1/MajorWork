@@ -1,16 +1,16 @@
 from django.db import models
 import os
 from globals import COURSE_TABLE
-from auth.models import User
+from users.models import User
 from search.models import Search
-from models.validators import is_title, make_title
+from oldmodels.validators import is_title, make_title
 
 
 class Course(models.Model):
-    name = models.TextField(required=True)
-    code = models.TextField()
+    name = models.TextField(unique=True)
+    code = models.TextField(unique=True)
 
-    teacher = models.ForeignKey(User, required=True)
+    teacher = models.ForeignKey(User, blank=False)
 
     @classmethod
     def create(cls, user, name, private):
@@ -36,5 +36,5 @@ class Course(models.Model):
         return '%s (taught by %s)' % (self.name, self.teacher)
 
 class UserCourse(models.Model):
-    user = models.ForeignKey(User, required=True)
-    course = models.ForeignKey(Course, required=True)
+    user = models.ForeignKey(User, blank=False)
+    course = models.ForeignKey(Course, blank=False)

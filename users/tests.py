@@ -1,9 +1,10 @@
-from models.tests.basetest import BaseTestCase
-from models import User
+from django.test import TestCase
+from users.models import User
 
 
-class UserTest(BaseTestCase):
+class UserTest(TestCase):
     def test_bad_register(self):
+        print User
         self.assertIsNotNone(
             User.register(None, 'matt@gmail.com', 'pwd', 'diffpwd', 'first', 'last'),
             'Attempt to register with different passwords'

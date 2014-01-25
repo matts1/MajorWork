@@ -4,10 +4,10 @@ from globals import COURSE_TABLE
 
 
 class Search(models.Model):
-    word = models.TextField(required=True)
-    tblkey = models.IntegerField(required=True)
-    table = models.IntegerField(required=True)
-    weight = models.IntegerField(required=True)
+    word = models.TextField(blank=False)
+    tblkey = models.IntegerField(blank=False)
+    table = models.IntegerField(blank=False)
+    weight = models.IntegerField(blank=False)
 
     @classmethod
     def add_words(cls, line, key, table):

@@ -1,7 +1,7 @@
 from google.appengine.ext import db
 import webapp2
 from globals import *
-from models import User, Course, Search
+from oldmodels import User, Course, Search
 
 from pages.auth import LoginHandler, LogoutHandler, ProfileHandler, RegisterHandler, SettingsHandler
 from pages.auth import ResetPwdHandler, ForgotPwdHandler
